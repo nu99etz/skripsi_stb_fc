@@ -46,6 +46,38 @@ class MainController extends CI_Controller
         ]
       ],
 
+      'Master Kerusakan' => [
+        'name' => 'Master Kerusakan STB',
+        'icon' => 'fa fa-cog',
+        'child' => [
+          'Master-1' => [
+            'name' => 'Data Gejala',
+            'icon' => 'fa fa-cog',
+            'url' => base_url() . 'gejala'
+          ],
+          'Master-2' => [
+            'name' => 'Data Kerusakan',
+            'icon' => 'fa fa-cog',
+            'url' => base_url() . 'kerusakan'
+          ],
+          'Master-3' => [
+            'name' => 'Data Penyebab Kerusakan',
+            'icon' => 'fa fa-cog',
+            'url' => base_url() . 'penyebab_kerusakan'
+          ],
+          'Master-4' => [
+            'name' => 'Data Solusi Kerusakan',
+            'icon' => 'fa fa-cog',
+            'url' => base_url() . 'solusi_kerusakan'
+          ],
+          // 'Master-2' => [
+          //   'name' => 'Data User',
+          //   'icon' => 'fa fa-user',
+          //   'url' => base_url() . 'user'
+          // ],
+        ]
+      ],
+
       'Log' => [
         'name' => 'Activity Log',
         'icon' => 'fa fa-database',

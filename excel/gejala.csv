@@ -1,0 +1,24 @@
+1,G1,LED Pada Panel Depan STB Tidak Menyala
+2,G2,LED Pada Panel Depan STB Menyala Merah
+3,G3,LED Pada Panel Depan STB Menyala Hijau
+4,G4,Kabel Adaptor Power STB Terputus
+5,G5,Power Adaptor STB Terasa Panas Berlebih
+6,G6,Tersetrum Saat Power Adaptor STB Disentuh
+7,G7,Tersetrum Saat Menyentuh STB
+8,G8,Tercium Bau Gosong Pada STB
+9,G9,Display Pada STB Bertuliskan ON
+10,G10,Display Pada STB Bertuliskan UP
+11,G11,Tampilan Bootlogo STB Pada Televisi Hanya Diam Dalam Waktu Lama
+12,G12,Tidak Ada Video / Gambar Pada Layar Televisi
+13,G13,Tidak Keluar suara Pada Televisi
+14,G14,Remote Control STB Tidak Respon 
+15,G15,Seluruh Channel Gelap
+16,G16,Tampil Pesan Error Searching For Signal
+17,G17,Bar Sinyal Naik Turun Tidak Stabil
+18,G18,Tampil Pesan  Data Channel Tidak Keluar
+19,G19,Gambar Jelek / Berkedip 
+20,G20,Bar Sinyal <50%
+21,G21,Channel Berbayar Atau Berlogo $ Gelap
+22,G22,Terdapat Email Atau Notifikasi Peringatan Masa Aktif
+23,G23,Beberapa Channel FTA (Free To Air) Gelap
+24,G24,Tampil Program Yang Berbeda Dengan EPG (Electronic Program Guide)

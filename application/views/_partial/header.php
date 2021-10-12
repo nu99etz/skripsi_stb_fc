@@ -40,6 +40,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
   <link rel="stylesheet" href="<?php echo base_url(); ?>assets/bower_components/sweetalert2/sweetalert2.min.css">
   <!-- Toastr -->
   <link rel="stylesheet" href="<?php echo base_url(); ?>assets/bower_components/toastr/toastr.min.css">
+  <!-- bootstrap wysihtml5 - text editor -->
+  <link rel="stylesheet" href="<?php echo base_url(); ?>assets/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
   <!-- jQuery 3 -->
   <script src="<?php echo base_url(); ?>assets/bower_components/jquery/dist/jquery.min.js"></script>
   <!-- Bootstrap 3.3.7 -->
@@ -63,6 +65,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
   <script src="<?php echo base_url(); ?>assets/bower_components/select2/dist/js/select2.full.min.js"></script>
   <!-- SlimScroll -->
   <script src="<?php echo base_url(); ?>assets/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+  <!-- CK Editor -->
+  <script src="<?php echo base_url(); ?>assets/bower_components/ckeditor/ckeditor.js"></script>
+  <!-- Bootstrap WYSIHTML5 -->
+  <script src="<?php echo base_url(); ?>assets/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>

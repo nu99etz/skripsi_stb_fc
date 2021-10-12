@@ -101,12 +101,6 @@ class UserModel extends MainModel
 
             $this->db->insert('pegawai', $data_pegawai);
 
-            if ($this->db->trans_status() === false) {
-                $this->db->trans_rollback();
-            } else {
-                $this->db->trans_commit();
-            }
-
             if ($post['role_id'] != 4) {
                 $check_pegawai = $this->db->select('id')->from('pegawai')->where(['kode_pegawai' => $kode_pegawai])->get()->row_array();
                 $data_user = [

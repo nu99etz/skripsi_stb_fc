@@ -47,14 +47,14 @@ CREATE TABLE aturan (
 CREATE TABLE penyebab_kerusakan (
     id int PRIMARY KEY AUTO_INCREMENT,
     kode_kerusakan int,
-    penyebab_kerusakan varchar(255),
+    penyebab_kerusakan text,
     FOREIGN KEY(kode_kerusakan) REFERENCES kerusakan(id)
 );
 
 CREATE TABLE solusi_kerusakan (
     id int PRIMARY KEY AUTO_INCREMENT,
     kode_kerusakan int,
-    solusi_kerusakan varchar(255),
+    solusi_kerusakan text,
     FOREIGN KEY(kode_kerusakan) REFERENCES kerusakan(id)
 );
 

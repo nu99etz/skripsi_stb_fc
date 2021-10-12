@@ -56,6 +56,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 // require(APPPATH . "routes/ms_standar.php");
 require(APPPATH. "routes/master_user.php");
 require(APPPATH. "routes/log.php");
+require(APPPATH. "routes/master_kerusakan.php");
 
 $route['default_controller'] = 'DashboardController/index';
 
