@@ -112,8 +112,6 @@ class UserModel extends MainModel
                     'last_login' => NULL,
                 ];
 
-                $this->db->trans_start();
-
                 $this->db->insert('ms_user', $data_user);
 
                 if ($this->db->trans_status() === false) {
