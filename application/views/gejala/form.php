@@ -5,11 +5,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 if (empty($gejala)) {
     $kode_gejala = '';
     $nama_gejala = '';
-    $instrumen = '';
 } else {
     $kode_gejala = $gejala['kode_gejala'];
     $nama_gejala = $gejala['nama_gejala'];
-    $instrumen = $gejala['instrumen'];
 }
 
 ?>
@@ -26,10 +24,6 @@ if (empty($gejala)) {
     <div class="form-group">
         <label for="nama_gejala">Nama Gejala</label>
         <input type="text" class="form-control" name="nama_gejala" id="nama_gejala" placeholder="Nama Gejala" value="<?php echo $nama_gejala; ?>">
-    </div>
-    <div class="form-group">
-        <label for="instrumen">Instrumen</label>
-        <input type="text" class="form-control" name="instrumen" id="instrumen" placeholder="Instrumen" value="<?php echo $instrumen; ?>">
     </div>
     <div class="form-group">
         <button type="submit" id="simpan" class="btn btn-success"><i class="fa fa-save"></i> Simpan</button>

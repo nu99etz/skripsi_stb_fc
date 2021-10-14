@@ -4,35 +4,45 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 require_once('MainController.php');
 
-class GejalaController extends MainController
+class RuleController extends MainController
 {
     public function __construct()
     {
         parent::__construct();
+        $this->load->model('RuleModel');
         $this->load->model('GejalaModel');
+        $this->load->model('KerusakanModel');
     }
 
     public function ajax()
     {
-        $data = $this->GejalaModel->GejalaDraw();
+        $data = $this->RuleModel->RuleDraw();
         $record = [];
         $no = $_POST['start'];
         foreach ($data as $value) {
             $no++;
             $row = [];
             $row[] = $no;
-            $row[] = $value['kode_gejala'];
-            $row[] = $value['nama_gejala'];
-            $button ='<button type="button" name="update" url="' . base_url().'gejala/edit/'.$value['id'] . '" class="edit btn btn-warning btn-sm"><i class = "fa fa-edit"></i></button> ';
-            $button .= '<button type="button" name="delete" url="' . base_url().'gejala/destroy/'.$value['id'] . '" class="delete btn btn-danger btn-sm"><i class = "fa fa-trash"></i></button> ';
+            $parent_gejala = $this->GejalaModel->getGejala($value['parent_kode_gejala']);
+            $child_gejala = $this->GejalaModel->getGejala($value['child_kode_gejala']);
+            if($value['kode_kerusakan'] == NULL) {
+                $kode_kerusakan['kode_kerusakan'] = '-';
+            } else {
+                $kode_kerusakan = $this->KerusakanModel->getKerusakan($value['kode_kerusakan']);
+            }
+            $row[] = $parent_gejala['kode_gejala'];
+            $row[] = $child_gejala['kode_gejala'];
+            $row[] = $kode_kerusakan['kode_kerusakan'];
+            $button ='<button type="button" name="update" url="' . base_url().'rule/edit/'.$value['id'] . '" class="edit btn btn-warning btn-sm"><i class = "fa fa-edit"></i></button> ';
+            $button .= '<button type="button" name="delete" url="' . base_url().'rule/destroy/'.$value['id'] . '" class="delete btn btn-danger btn-sm"><i class = "fa fa-trash"></i></button> ';
             $row[] = $button;
             $record[] = $row;
         }
 
         $response = [
             'draw' => $_POST['draw'],
-            'recordsTotal' => $this->GejalaModel->GejalaTotal(),
-            'recordsFiltered' => $this->GejalaModel->GejalaFilter(),
+            'recordsTotal' => $this->RuleModel->RuleTotal(),
+            'recordsFiltered' => $this->RuleModel->RuleFilter(),
             'data' => $record,
         ];
 
@@ -42,7 +52,7 @@ class GejalaController extends MainController
     public function index()
     {
         $layout = [
-            'gejala/index'
+            'rule/index'
         ];
         $this->getLayout($layout);
     }
@@ -50,14 +60,16 @@ class GejalaController extends MainController
     public function form()
     {
         $data = [
-            'action' => base_url().'gejala/store'
+            'action' => base_url().'rule/store',
+            'gejala' => $this->GejalaModel->getAllGejala(),
+            'kerusakan' => $this->KerusakanModel->getAllKerusakan()
         ];
-        $this->load->view('gejala/form', $data);
+        $this->load->view('rule/form', $data);
     }
 
     public function store()
     {
-        $insert = $this->GejalaModel->storeGejala();
+        $insert = $this->RuleModel->storeRule();
         if($insert['status'] == 'notvalid') {
             $response = [
                 'status' => 'notvalid',
@@ -80,15 +92,17 @@ class GejalaController extends MainController
     public function edit($id)
     {
         $data = [
-            'action' => base_url().'gejala/update/'. $id,
-            'gejala' => $this->GejalaModel->editGejala($id)
+            'action' => base_url().'rule/update/'. $id,
+            'rule' => $this->RuleModel->editRule($id),
+            'gejala' => $this->GejalaModel->getAllGejala(),
+            'kerusakan' => $this->KerusakanModel->getAllKerusakan()
         ];
-        $this->load->view('gejala/form', $data);
+        $this->load->view('rule/form', $data);
     }
 
     public function update($id)
     {
-        $update = $this->GejalaModel->updateGejala($id);
+        $update = $this->RuleModel->updateRule($id);
         if($update['status'] == 'notvalid') {
             $response = [
                 'status' => 'notvalid',
@@ -110,7 +124,7 @@ class GejalaController extends MainController
 
     public function destroy($id)
     {
-        $this->GejalaModel->destroyGejala($id);
+        $this->RuleModel->destroyRule($id);
         $response = [
             'status' => 'success',
             'messages' => 'Data Sukses Dihapus'

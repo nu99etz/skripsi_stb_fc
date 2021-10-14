@@ -134,4 +134,10 @@ class PenyebabKerusakanModel extends MainModel
         $this->db->where(['id' => $id])->delete('penyebab_kerusakan');
         $this->insertLog($this->session->userdata('name'), 'hapus-penyebab-kerusakan', $post, 0);
     }
+
+    public function getPenyebabKerusakan($id)
+    {
+        $penyebab = $this->db->select('*')->from('penyebab_kerusakan')->where(['kode_kerusakan' => $id])->get();
+        return $penyebab->row_array();
+    }
 }

@@ -9,13 +9,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            Data Gejala
-            <small>Data Gejala</small>
+            Aturan
+            <small>Aturan</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="<?php echo base_url(); ?>"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="active">Master Kerusakan STB</li>
-            <li class="active">Data Gejala</li>
+            <li class="active">Aturan</li>
         </ol>
     </section>
 
@@ -25,18 +24,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <div class="col-xs-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">Data Gejala</h3>
+                        <h3 class="box-title">Aturan</h3>
                     </div>
                     <div class="box-body">
-                        <button style="float: right;" action="<?php echo base_url(); ?>gejala/form" type="button" class="add btn btn-sm btn-success"><i class="fa fa-plus"></i> Tambah</button>
+                        <button style="float: right;" action="<?php echo base_url(); ?>rule/form" type="button" class="add btn btn-sm btn-success"><i class="fa fa-plus"></i> Tambah</button>
                         <br />
                         <br />
-                        <table id="gejala" class="table table-bordered table-striped">
+                        <table id="rule" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Kode Gejala</th>
-                                    <th>Nama Gejala</th>
+                                    <th>Parent Kode Gejala</th>
+                                    <th>Child Kode Gejala</th>
+                                    <th>Kode Kerusakan</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -45,8 +45,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <tfoot>
                                 <tr>
                                     <th>No</th>
-                                    <th>Kode Gejala</th>
-                                    <th>Nama Gejala</th>
+                                    <th>Parent Kode Gejala</th>
+                                    <th>Child Kode Gejala</th>
+                                    <th>Kode Kerusakan</th>
                                     <th>Aksi</th>
                                 </tr>
                             </tfoot>
@@ -63,17 +64,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 <?php
 
-$data['modal_id'] = 'form-gejala';
+$data['modal_id'] = 'form-rule';
 $data['modal_size'] = 'lg';
-$data['modal_title'] = 'Form Gejala';
+$data['modal_title'] = 'Form Aturan';
 $this->load->view('_partial/modal', $data);
 
 ?>
 
 <script>
-    let _table = $('#gejala');
-    let _url = "<?php echo base_url(); ?>gejala/ajax";
-    let _modal = $('#form-gejala');
+    let _table = $('#rule');
+    let _url = "<?php echo base_url(); ?>rule/ajax";
+    let _modal = $('#form-rule');
 
     $(_table).DataTable({
         language: {

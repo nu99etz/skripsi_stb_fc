@@ -78,10 +78,22 @@ class MainController extends CI_Controller
         ]
       ],
 
+      'Aturan' => [
+        'name' => 'Aturan',
+        'icon' => 'fa fa-tree',
+        'url' => base_url(). 'rule'
+      ],
+
       'Log' => [
         'name' => 'Activity Log',
         'icon' => 'fa fa-database',
         'url' => base_url(). 'log'
+      ],
+
+      'Question' => [
+        'name' => 'Konsultasi',
+        'icon' => 'fa fa-info',
+        'url' => base_url() . 'question'
       ],
 
       // 'Data Uji' => [

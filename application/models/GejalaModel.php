@@ -10,13 +10,11 @@ class GejalaModel extends MainModel
         $gejala['column_search'] = [
             'kode_gejala',
             'nama_gejala',
-            'instrumen'
         ];
         $gejala['column_order'] = [
             null,
             'kode_gejala',
             'nama_gejala',
-            'instrumen',
             null
         ];
         $gejala['order'] = [
@@ -48,7 +46,6 @@ class GejalaModel extends MainModel
         $post = $this->input->post();
         $this->form_validation->set_rules('kode_gejala', 'Kode Gejala', 'required');
         $this->form_validation->set_rules('nama_gejala', 'Nama Gejala', 'required');
-        $this->form_validation->set_rules('instrumen', 'Instrumen', 'required');
 
         if ($this->form_validation->run()) {
 
@@ -64,7 +61,6 @@ class GejalaModel extends MainModel
                 $data_gejala = [
                     'kode_gejala' => strtoupper($post['kode_gejala']),
                     'nama_gejala' => ucwords($post['nama_gejala']),
-                    'instrumen' => ucwords($post['instrumen'])
                 ];
 
                 $this->db->trans_start();
@@ -103,13 +99,11 @@ class GejalaModel extends MainModel
     {
         $post = $this->input->post();
         $this->form_validation->set_rules('nama_gejala', 'Nama Gejala', 'required');
-        $this->form_validation->set_rules('instrumen', 'Instrumen', 'required');
 
         if ($this->form_validation->run()) {
 
             $data_gejala = [
                 'nama_gejala' => ucwords($post['nama_gejala']),
-                'instrumen' => ucwords($post['instrumen'])
             ];
 
             $this->db->trans_start();
@@ -156,5 +150,17 @@ class GejalaModel extends MainModel
 
         $this->db->where(['id' => $id])->delete('gejala');
         $this->insertLog($this->session->userdata('name'), 'hapus-gejala', $post, 0);
+    }
+
+    public function getAllGejala()
+    {
+        $gejala = $this->db->select('*')->from('gejala')->get();
+        return $gejala->result_array();
+    }
+
+    public function getGejala($id)
+    {
+        $gejala = $this->db->select('*')->from('gejala')->where(['id' => $id])->get();
+        return $gejala->row_array();
     }
 }

@@ -134,4 +134,10 @@ class SolusiKerusakanModel extends MainModel
         $this->db->where(['id' => $id])->delete('solusi_kerusakan');
         $this->insertLog($this->session->userdata('name'), 'hapus-solusi-kerusakan', $post, 0);
     }
+
+    public function getSolusiKerusakan($id)
+    {
+        $solusi = $this->db->select('*')->from('solusi_kerusakan')->where(['kode_kerusakan' => $id])->get();
+        return $solusi->row_array();
+    }
 }
