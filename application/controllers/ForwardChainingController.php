@@ -10,7 +10,7 @@ class ForwardChainingController extends MainController
     protected $parent = [];
     protected $child = [];
     protected $connected = [];
-    protected $kerusakan = [];
+    protected $kerusakan = []; // Untuk menampung data kerusakan
 
     public function __construct()
     {
@@ -53,6 +53,14 @@ class ForwardChainingController extends MainController
         return $this->child;
     }
 
+
+    /**
+     * 
+     * Fungsi Mencari Best First Search
+     * @param $kode_gejala
+     * @param $gejala
+     * 
+     */
     public function bestFirstSearch($kode_gejala, $gejala)
     {
         // $find = [];
@@ -65,13 +73,21 @@ class ForwardChainingController extends MainController
                     // $this->setConnected($child['parent_kode_gejala'], $child['child_kode_gejala']);
                     // $this->setKerusakan($child['parent_kode_gejala'], $child['child_kode_gejala'], $child['kode_kerusakan']);
                     if (!empty($child['kode_kerusakan'])) {
-                        $this->kerusakan[] = $child['kode_kerusakan'];
+                        $this->kerusakan[] = $child['kode_kerusakan']; // Ambil kode kerusakan dan masukkan ke variabel kerusakan
                     }
                 }
             }
         }
     }
 
+    /**
+     * 
+     * Fungsi Mengecek apakah child kode gejala atau parent kode gejala ada di list centang
+     * @param $kode_gejala
+     * @param $gejala
+     * 
+     * @return bool
+     */
     private function checkGejalaExist($kode_gejala, $gejala)
     {
         $find = 0;
