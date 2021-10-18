@@ -3,13 +3,24 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Oct 18, 2021 at 09:24 AM
--- Server version: 10.6.4-MariaDB
--- PHP Version: 8.0.11
+-- Waktu pembuatan: 14 Okt 2021 pada 11.27
+-- Versi server: 10.6.4-MariaDB
+-- Versi PHP: 8.0.11
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
+
+DROP TABLE `activity_log`;
+DROP TABLE `aturan`;
+DROP TABLE `solusi_kerusakan`;
+DROP TABLE `penyebab_kerusakan`;
+DROP TABLE `kerusakan`;
+DROP TABLE `gejala`;
+DROP TABLE `ms_user`;
+DROP TABLE `pegawai`;
+DROP TABLE `ms_role`;
+DROP TABEL `v_aturan`;
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -21,21 +32,10 @@ SET time_zone = "+00:00";
 -- Database: `skripsi_fc`
 --
 
-DROP TABLE `activity_log`;
-DROP TABLE `aturan`;
-DROP TABLE `solusi_kerusakan`;
-DROP TABLE `penyebab_kerusakan`;
-DROP TABLE `kerusakan`;
-DROP TABLE `gejala`;
-DROP TABLE `ms_user`;
-DROP TABLE `pegawai`;
-DROP TABLE `ms_role`;
-DROP TABLE `v_aturan`;
-
 -- --------------------------------------------------------
 
 --
--- Table structure for table `activity_log`
+-- Struktur dari tabel `activity_log`
 --
 
 CREATE TABLE `activity_log` (
@@ -49,44 +49,81 @@ CREATE TABLE `activity_log` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `activity_log`
+-- Dumping data untuk tabel `activity_log`
 --
+
+INSERT INTO `activity_log` (`id`, `username`, `ip_address`, `activity_log`, `activity_date`, `parameters`, `is_success`) VALUES
+(1, 'admin', '::1', 'login', 'Wed Oct 13 15:28:37 WIB 2021', '{\"username\":\"admin\"}', 0),
+(2, 'admin', '::1', 'insert-aturan', 'Wed Oct 13 15:52:41 WIB 2021', '{\"parent_kode_gejala\":\"\",\"child_kode_gejala\":\"\",\"kode_kerusakan\":\"\"}', 1),
+(3, 'admin', '::1', 'insert-aturan', 'Wed Oct 13 15:52:59 WIB 2021', '{\"parent_kode_gejala\":\"1\",\"child_kode_gejala\":\"5\",\"kode_kerusakan\":\"\"}', 0),
+(4, 'admin', '::1', 'insert-aturan', 'Wed Oct 13 15:53:15 WIB 2021', '{\"parent_kode_gejala\":\"5\",\"child_kode_gejala\":\"6\",\"kode_kerusakan\":\"2\"}', 0),
+(5, 'admin', '::1', 'update-aturan', 'Wed Oct 13 15:54:41 WIB 2021', '{\"parent_kode_gejala\":\"1\",\"child_kode_gejala\":\"4\",\"kode_kerusakan\":\"1\"}', 0),
+(6, 'admin', '::1', 'insert-aturan', 'Wed Oct 13 15:55:22 WIB 2021', '{\"parent_kode_gejala\":\"1\",\"child_kode_gejala\":\"7\",\"kode_kerusakan\":\"\"}', 0),
+(7, 'admin', '::1', 'insert-aturan', 'Wed Oct 13 15:55:40 WIB 2021', '{\"parent_kode_gejala\":\"7\",\"child_kode_gejala\":\"8\",\"kode_kerusakan\":\"3\"}', 0),
+(8, 'admin', '::1', 'insert-aturan', 'Wed Oct 13 15:56:04 WIB 2021', '{\"parent_kode_gejala\":\"2\",\"child_kode_gejala\":\"9\",\"kode_kerusakan\":\"4\"}', 0),
+(9, 'admin', '::1', 'insert-aturan', 'Wed Oct 13 15:56:18 WIB 2021', '{\"parent_kode_gejala\":\"2\",\"child_kode_gejala\":\"10\",\"kode_kerusakan\":\"\"}', 0),
+(10, 'admin', '::1', 'insert-aturan', 'Wed Oct 13 15:56:40 WIB 2021', '{\"parent_kode_gejala\":\"10\",\"child_kode_gejala\":\"11\",\"kode_kerusakan\":\"5\"}', 0),
+(11, 'admin', '::1', 'insert-aturan', 'Wed Oct 13 15:57:29 WIB 2021', '{\"parent_kode_gejala\":\"3\",\"child_kode_gejala\":\"12\",\"kode_kerusakan\":\"\"}', 0),
+(12, 'admin', '::1', 'insert-aturan', 'Wed Oct 13 15:57:51 WIB 2021', '{\"parent_kode_gejala\":\"12\",\"child_kode_gejala\":\"13\",\"kode_kerusakan\":\"6\"}', 0),
+(13, 'admin', '::1', 'insert-aturan', 'Wed Oct 13 16:01:38 WIB 2021', '{\"parent_kode_gejala\":\"3\",\"child_kode_gejala\":\"14\",\"kode_kerusakan\":\"7\"}', 0),
+(14, 'admin', '::1', 'insert-aturan', 'Wed Oct 13 16:02:52 WIB 2021', '{\"parent_kode_gejala\":\"3\",\"child_kode_gejala\":\"15\",\"kode_kerusakan\":\"\"}', 0),
+(15, 'admin', '::1', 'insert-aturan', 'Wed Oct 13 16:03:13 WIB 2021', '{\"parent_kode_gejala\":\"15\",\"child_kode_gejala\":\"16\",\"kode_kerusakan\":\"\"}', 0),
+(16, 'admin', '::1', 'insert-aturan', 'Wed Oct 13 16:03:37 WIB 2021', '{\"parent_kode_gejala\":\"16\",\"child_kode_gejala\":\"17\",\"kode_kerusakan\":\"8\"}', 0),
+(17, 'admin', '::1', 'insert-aturan', 'Wed Oct 13 16:05:41 WIB 2021', '{\"parent_kode_gejala\":\"15\",\"child_kode_gejala\":\"18\",\"kode_kerusakan\":\"9\"}', 0),
+(18, 'admin', '::1', 'insert-aturan', 'Wed Oct 13 16:06:19 WIB 2021', '{\"parent_kode_gejala\":\"3\",\"child_kode_gejala\":\"19\",\"kode_kerusakan\":\"\"}', 0),
+(19, 'admin', '::1', 'insert-aturan', 'Wed Oct 13 16:06:42 WIB 2021', '{\"parent_kode_gejala\":\"19\",\"child_kode_gejala\":\"20\",\"kode_kerusakan\":\"10\"}', 0),
+(20, 'admin', '::1', 'insert-aturan', 'Wed Oct 13 16:07:37 WIB 2021', '{\"parent_kode_gejala\":\"3\",\"child_kode_gejala\":\"21\",\"kode_kerusakan\":\"\"}', 0),
+(21, 'admin', '::1', 'insert-aturan', 'Wed Oct 13 16:08:04 WIB 2021', '{\"parent_kode_gejala\":\"21\",\"child_kode_gejala\":\"22\",\"kode_kerusakan\":\"11\"}', 0),
+(22, 'admin', '::1', 'insert-aturan', 'Wed Oct 13 16:08:42 WIB 2021', '{\"parent_kode_gejala\":\"3\",\"child_kode_gejala\":\"23\",\"kode_kerusakan\":\"\"}', 0),
+(23, 'admin', '::1', 'insert-aturan', 'Wed Oct 13 16:09:01 WIB 2021', '{\"parent_kode_gejala\":\"23\",\"child_kode_gejala\":\"24\",\"kode_kerusakan\":\"12\"}', 0),
+(24, 'admin', '::1', 'login', 'Thu Oct 14 12:00:39 WIB 2021', '{\"username\":\"admin\"}', 0),
+(25, 'admin', '::1', 'login', 'Thu Oct 14 16:56:31 WIB 2021', '{\"username\":\"admin\"}', 0),
+(26, 'admin', '::1', 'logout', 'Thu Oct 14 18:25:30 WIB 2021', '{\"username\":\"admin\"}', 0);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `aturan`
+-- Struktur dari tabel `aturan`
 --
 
 CREATE TABLE `aturan` (
   `id` int(11) NOT NULL,
   `parent_kode_gejala` int(11) DEFAULT NULL,
-  `child_kode_gejala` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `child_kode_gejala` varchar(255) DEFAULT NULL,
   `kode_kerusakan` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `aturan`
---
+-- --
+-- -- Dumping data untuk tabel `aturan`
+-- --
 
-INSERT INTO `aturan` (`id`, `parent_kode_gejala`, `child_kode_gejala`, `kode_kerusakan`) VALUES
-(27, 1, '4', 1),
-(28, 1, '5,6', 2),
-(29, 1, '7,8', 3),
-(30, 2, '9', 4),
-(31, 2, '10,11', 5),
-(32, 3, '12,13', 6),
-(33, 3, '14', 7),
-(34, 3, '15,16,17', 8),
-(35, 3, '18', 9),
-(36, 3, '19,20', 10),
-(37, 3, '21,22', 11),
-(38, 3, '23,24', 12);
+-- INSERT INTO `aturan` (`id`, `parent_kode_gejala`, `child_kode_gejala`, `kode_kerusakan`) VALUES
+-- (1, 1, 4, 1),
+-- (2, 1, 5, NULL),
+-- (3, 5, 6, 2),
+-- (4, 1, 7, NULL),
+-- (5, 7, 8, 3),
+-- (6, 2, 9, 4),
+-- (7, 2, 10, NULL),
+-- (8, 10, 11, 5),
+-- (9, 3, 12, NULL),
+-- (10, 12, 13, 6),
+-- (11, 3, 14, 7),
+-- (12, 3, 15, NULL),
+-- (13, 15, 16, NULL),
+-- (14, 16, 17, 8),
+-- (15, 15, 18, 9),
+-- (16, 3, 19, NULL),
+-- (17, 19, 20, 10),
+-- (18, 3, 21, NULL),
+-- (19, 21, 22, 11),
+-- (20, 3, 23, NULL),
+-- (21, 23, 24, 12);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `gejala`
+-- Struktur dari tabel `gejala`
 --
 
 CREATE TABLE `gejala` (
@@ -96,7 +133,7 @@ CREATE TABLE `gejala` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `gejala`
+-- Dumping data untuk tabel `gejala`
 --
 
 INSERT INTO `gejala` (`id`, `kode_gejala`, `nama_gejala`) VALUES
@@ -128,7 +165,7 @@ INSERT INTO `gejala` (`id`, `kode_gejala`, `nama_gejala`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `kerusakan`
+-- Struktur dari tabel `kerusakan`
 --
 
 CREATE TABLE `kerusakan` (
@@ -138,7 +175,7 @@ CREATE TABLE `kerusakan` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `kerusakan`
+-- Dumping data untuk tabel `kerusakan`
 --
 
 INSERT INTO `kerusakan` (`id`, `kode_kerusakan`, `nama_kerusakan`) VALUES
@@ -158,7 +195,7 @@ INSERT INTO `kerusakan` (`id`, `kode_kerusakan`, `nama_kerusakan`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ms_role`
+-- Struktur dari tabel `ms_role`
 --
 
 CREATE TABLE `ms_role` (
@@ -167,7 +204,7 @@ CREATE TABLE `ms_role` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `ms_role`
+-- Dumping data untuk tabel `ms_role`
 --
 
 INSERT INTO `ms_role` (`id_role`, `nama_role`) VALUES
@@ -179,7 +216,7 @@ INSERT INTO `ms_role` (`id_role`, `nama_role`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ms_user`
+-- Struktur dari tabel `ms_user`
 --
 
 CREATE TABLE `ms_user` (
@@ -193,16 +230,16 @@ CREATE TABLE `ms_user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `ms_user`
+-- Dumping data untuk tabel `ms_user`
 --
 
 INSERT INTO `ms_user` (`id`, `id_user`, `username`, `password`, `is_login`, `login_date`, `last_login`) VALUES
-(1, 1, 'admin', 'ee11cbb19052e40b07aac0ca060c23ee', 1, 'Mon Oct 18 13:55:55 WIB 2021', 'Thu Oct 14 18:25:30 WIB 2021');
+(1, 1, 'admin', 'ee11cbb19052e40b07aac0ca060c23ee', 0, NULL, 'Thu Oct 14 18:25:30 WIB 2021');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `pegawai`
+-- Struktur dari tabel `pegawai`
 --
 
 CREATE TABLE `pegawai` (
@@ -215,7 +252,7 @@ CREATE TABLE `pegawai` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `pegawai`
+-- Dumping data untuk tabel `pegawai`
 --
 
 INSERT INTO `pegawai` (`id`, `role_id`, `kode_pegawai`, `nama_pegawai`, `alamat_pegawai`, `nomor_telepon_pegawai`) VALUES
@@ -224,7 +261,7 @@ INSERT INTO `pegawai` (`id`, `role_id`, `kode_pegawai`, `nama_pegawai`, `alamat_
 -- --------------------------------------------------------
 
 --
--- Table structure for table `penyebab_kerusakan`
+-- Struktur dari tabel `penyebab_kerusakan`
 --
 
 CREATE TABLE `penyebab_kerusakan` (
@@ -234,7 +271,7 @@ CREATE TABLE `penyebab_kerusakan` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `penyebab_kerusakan`
+-- Dumping data untuk tabel `penyebab_kerusakan`
 --
 
 INSERT INTO `penyebab_kerusakan` (`id`, `kode_kerusakan`, `penyebab_kerusakan`) VALUES
@@ -254,7 +291,7 @@ INSERT INTO `penyebab_kerusakan` (`id`, `kode_kerusakan`, `penyebab_kerusakan`) 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `solusi_kerusakan`
+-- Struktur dari tabel `solusi_kerusakan`
 --
 
 CREATE TABLE `solusi_kerusakan` (
@@ -264,7 +301,7 @@ CREATE TABLE `solusi_kerusakan` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `solusi_kerusakan`
+-- Dumping data untuk tabel `solusi_kerusakan`
 --
 
 INSERT INTO `solusi_kerusakan` (`id`, `kode_kerusakan`, `solusi_kerusakan`) VALUES
@@ -283,135 +320,187 @@ INSERT INTO `solusi_kerusakan` (`id`, `kode_kerusakan`, `solusi_kerusakan`) VALU
 
 -- --------------------------------------------------------
 
---
--- Table structure for table `v_aturan`
---
+-- --
+-- -- Stand-in struktur untuk tampilan `v_aturan`
+-- -- (Lihat di bawah untuk tampilan aktual)
+-- --
+-- CREATE TABLE `v_aturan` (
+-- `id` int(11)
+-- ,`parent_kode_gejala` int(11)
+-- ,`child_kode_gejala` int(11)
+-- ,`kode_kerusakan` int(11)
+-- ,`parent_gejala` varchar(255)
+-- ,`child_gejala` varchar(255)
+-- ,`nama_kerusakan` varchar(255)
+-- );
 
-CREATE TABLE `v_aturan` (
-  `id` int(11) DEFAULT NULL,
-  `parent_kode_gejala` int(11) DEFAULT NULL,
-  `child_kode_gejala` int(11) DEFAULT NULL,
-  `kode_kerusakan` int(11) DEFAULT NULL,
-  `parent_gejala` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `child_gejala` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `nama_kerusakan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- --------------------------------------------------------
+
+-- --
+-- -- Struktur untuk view `v_aturan`
+-- --
+-- DROP TABLE IF EXISTS `v_aturan`;
+
+-- CREATE ALGORITHM=UNDEFINED DEFINER=`nu99etz`@`localhost` SQL SECURITY DEFINER VIEW `v_aturan`  AS SELECT `a`.`id` AS `id`, `a`.`parent_kode_gejala` AS `parent_kode_gejala`, `a`.`child_kode_gejala` AS `child_kode_gejala`, `a`.`kode_kerusakan` AS `kode_kerusakan`, `b`.`kode_gejala` AS `parent_gejala`, `c`.`kode_gejala` AS `child_gejala`, `k`.`kode_kerusakan` AS `nama_kerusakan` FROM (((`aturan` `a` left join `gejala` `b` on(`a`.`parent_kode_gejala` = `b`.`id`)) left join `gejala` `c` on(`a`.`child_kode_gejala` = `c`.`id`)) left join `kerusakan` `k` on(`a`.`kode_kerusakan` = `k`.`id`)) WHERE 1 = 1 ;
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `activity_log`
+-- Indeks untuk tabel `activity_log`
 --
 ALTER TABLE `activity_log`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `aturan`
+-- Indeks untuk tabel `aturan`
 --
 ALTER TABLE `aturan`
   ADD PRIMARY KEY (`id`),
   ADD KEY `parent_kode_gejala` (`parent_kode_gejala`),
+  -- ADD KEY `child_kode_gejala` (`child_kode_gejala`),
   ADD KEY `kode_kerusakan` (`kode_kerusakan`);
 
 --
--- Indexes for table `gejala`
+-- Indeks untuk tabel `gejala`
 --
 ALTER TABLE `gejala`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `kerusakan`
+-- Indeks untuk tabel `kerusakan`
 --
 ALTER TABLE `kerusakan`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `ms_role`
+-- Indeks untuk tabel `ms_role`
 --
 ALTER TABLE `ms_role`
   ADD PRIMARY KEY (`id_role`);
 
 --
--- Indexes for table `ms_user`
+-- Indeks untuk tabel `ms_user`
 --
 ALTER TABLE `ms_user`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id_user` (`id_user`);
 
 --
--- Indexes for table `pegawai`
+-- Indeks untuk tabel `pegawai`
 --
 ALTER TABLE `pegawai`
   ADD PRIMARY KEY (`id`),
   ADD KEY `role_id` (`role_id`);
 
 --
--- Indexes for table `penyebab_kerusakan`
+-- Indeks untuk tabel `penyebab_kerusakan`
 --
 ALTER TABLE `penyebab_kerusakan`
   ADD PRIMARY KEY (`id`),
   ADD KEY `kode_kerusakan` (`kode_kerusakan`);
 
 --
--- Indexes for table `solusi_kerusakan`
+-- Indeks untuk tabel `solusi_kerusakan`
 --
 ALTER TABLE `solusi_kerusakan`
   ADD PRIMARY KEY (`id`),
   ADD KEY `kode_kerusakan` (`kode_kerusakan`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT untuk tabel yang dibuang
 --
 
 --
--- AUTO_INCREMENT for table `activity_log`
+-- AUTO_INCREMENT untuk tabel `activity_log`
 --
 ALTER TABLE `activity_log`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
--- AUTO_INCREMENT for table `aturan`
+-- AUTO_INCREMENT untuk tabel `aturan`
 --
 ALTER TABLE `aturan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
--- AUTO_INCREMENT for table `gejala`
+-- AUTO_INCREMENT untuk tabel `gejala`
 --
 ALTER TABLE `gejala`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
--- AUTO_INCREMENT for table `kerusakan`
+-- AUTO_INCREMENT untuk tabel `kerusakan`
 --
 ALTER TABLE `kerusakan`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
--- AUTO_INCREMENT for table `ms_role`
+-- AUTO_INCREMENT untuk tabel `ms_role`
 --
 ALTER TABLE `ms_role`
   MODIFY `id_role` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT for table `ms_user`
+-- AUTO_INCREMENT untuk tabel `ms_user`
 --
 ALTER TABLE `ms_user`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `pegawai`
+-- AUTO_INCREMENT untuk tabel `pegawai`
 --
 ALTER TABLE `pegawai`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `penyebab_kerusakan`
+-- AUTO_INCREMENT untuk tabel `penyebab_kerusakan`
 --
 ALTER TABLE `penyebab_kerusakan`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
+-- AUTO_INCREMENT untuk tabel `solusi_kerusakan`
+--
+ALTER TABLE `solusi_kerusakan`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
+--
+
+--
+-- Ketidakleluasaan untuk tabel `aturan`
+--
+ALTER TABLE `aturan`
+  ADD CONSTRAINT `aturan_ibfk_1` FOREIGN KEY (`parent_kode_gejala`) REFERENCES `gejala` (`id`),
+  -- ADD CONSTRAINT `aturan_ibfk_2` FOREIGN KEY (`child_kode_gejala`) REFERENCES `gejala` (`id`),
+  ADD CONSTRAINT `aturan_ibfk_3` FOREIGN KEY (`kode_kerusakan`) REFERENCES `kerusakan` (`id`);
+
+--
+-- Ketidakleluasaan untuk tabel `ms_user`
+--
+ALTER TABLE `ms_user`
+  ADD CONSTRAINT `ms_user_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `pegawai` (`id`);
+
+--
+-- Ketidakleluasaan untuk tabel `pegawai`
+--
+ALTER TABLE `pegawai`
+  ADD CONSTRAINT `pegawai_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `ms_role` (`id_role`);
+
+--
+-- Ketidakleluasaan untuk tabel `penyebab_kerusakan`
+--
+ALTER TABLE `penyebab_kerusakan`
+  ADD CONSTRAINT `penyebab_kerusakan_ibfk_1` FOREIGN KEY (`kode_kerusakan`) REFERENCES `kerusakan` (`id`);
+
+--
+-- Ketidakleluasaan untuk tabel `solusi_kerusakan`
+--
+ALTER TABLE `solusi_kerusakan`
+  ADD CONSTRAINT `solusi_kerusakan_ibfk_1` FOREIGN KEY (`kode_kerusakan`) REFERENCES `kerusakan` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

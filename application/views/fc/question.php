@@ -33,7 +33,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 ?>
                                     <div class="checkbox">
                                         <label>
-                                            <input type="checkbox" name="<?php echo $gejalas['id']; ?>" id="<?php echo $gejalas['id']; ?>" value="<?php echo $gejalas['id']; ?>">
+                                            <input type="checkbox" name="question[]" id="<?php echo $gejalas['id']; ?>" value="<?php echo $gejalas['id']; ?>">
                                             <?php echo $gejalas['kode_gejala'] . " - " . $gejalas['nama_gejala']; ?>
                                         </label>
                                     </div>

@@ -47,21 +47,17 @@ class RuleModel extends MainModel
     {
         $post = $this->input->post();
         $this->form_validation->set_rules('parent_kode_gejala', 'Parent Kode Gejala', 'required');
-        $this->form_validation->set_rules('child_kode_gejala', 'Child Kode Gejala', 'required');
-        // $this->form_validation->set_rules('kode_kerusakan', 'Child Kode Gejala', 'required');
+        // $this->form_validation->set_rules('child_kode_gejala', 'Child Kode Gejala', 'required');
+        $this->form_validation->set_rules('kode_kerusakan', 'Child Kode Gejala', 'required');
 
         if ($this->form_validation->run()) {
 
-            if(!empty($post['kode_kerusakan'])) {
-                $kode_kerusakan = $post['kode_kerusakan'];
-            } else {
-                $kode_kerusakan = NULL;
-            }
+            $child_kode_gejala = implode(',', $post['child_kode_gejala']);
 
             $data_rule = [
                 'parent_kode_gejala' => $post['parent_kode_gejala'],
-                'child_kode_gejala' => $post['child_kode_gejala'],
-                'kode_kerusakan' => $kode_kerusakan
+                'child_kode_gejala' => $child_kode_gejala,
+                'kode_kerusakan' => $post['kode_kerusakan']
             ];
 
             $this->db->trans_start();
@@ -99,20 +95,17 @@ class RuleModel extends MainModel
     {
         $post = $this->input->post();
         $this->form_validation->set_rules('parent_kode_gejala', 'Parent Kode Gejala', 'required');
-        $this->form_validation->set_rules('child_kode_gejala', 'Child Kode Gejala', 'required');
+        // $this->form_validation->set_rules('child_kode_gejala', 'Child Kode Gejala', 'required');
+        $this->form_validation->set_rules('kode_kerusakan', 'Child Kode Gejala', 'required');
 
         if ($this->form_validation->run()) {
 
-            if(!empty($post['kode_kerusakan'])) {
-                $kode_kerusakan = $post['kode_kerusakan'];
-            } else {
-                $kode_kerusakan = NULL;
-            }
+            $child_kode_gejala = implode(',', $post['child_kode_gejala']);
 
             $data_rule = [
                 'parent_kode_gejala' => $post['parent_kode_gejala'],
-                'child_kode_gejala' => $post['child_kode_gejala'],
-                'kode_kerusakan' => $kode_kerusakan
+                'child_kode_gejala' => $child_kode_gejala,
+                'kode_kerusakan' => $post['kode_kerusakan']
             ];
 
             $this->db->trans_start();
@@ -150,5 +143,11 @@ class RuleModel extends MainModel
 
         $this->db->where(['id' => $id])->delete('aturan');
         $this->insertLog($this->session->userdata('name'), 'hapus-aturan', $post, 0);
+    }
+
+    public function getAllRule()
+    {
+        $rule = $this->db->select('*')->from('rule')->get();
+        return $rule->result_array();
     }
 }

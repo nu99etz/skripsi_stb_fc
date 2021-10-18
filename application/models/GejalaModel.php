@@ -163,4 +163,46 @@ class GejalaModel extends MainModel
         $gejala = $this->db->select('*')->from('gejala')->where(['id' => $id])->get();
         return $gejala->row_array();
     }
+
+    public function GejalaIFExist($rule_id)
+    {
+        $gejala = $this->getAllGejala();
+        $rule = $this->db->select('*')->from('aturan');
+        if($rule_id != null) {
+            $sql_rule = $rule->where('id != ', $rule_id)->get();
+        } else {
+            $sql_rule = $rule->get();
+        }
+        $rule_array = $sql_rule->result_array();
+        $record_gejala = [];
+        foreach($gejala as $value) {
+            $row = [];
+            $found = 0;
+            for($i = 0; $i < count($rule_array); $i++) {
+                $explode_gejala = explode(',', $rule_array[$i]['child_kode_gejala']);
+                if($value['id'] == $rule_array[$i]['parent_kode_gejala']) {
+                    $found ++;
+                } else if(in_array($value['id'], $explode_gejala)) {
+                    $found ++;
+                }
+            }
+            if($found == 0) {
+                $row['id'] = $value['id'];
+                $row['kode_gejala'] = $value['kode_gejala'];
+                $row['nama_gejala'] = $value['nama_gejala'];
+                $record_gejala[] = $row;
+            }
+        }
+        return $record_gejala;
+    }
+
+    public function getChildGejalaKode($child)
+    {
+        $explode_gejala = explode(',', $child);
+        for ($i = 0; $i < count($explode_gejala); $i++) {
+            $kode_gejala = $this->getGejala($explode_gejala[$i]);
+            $row[$i] = $kode_gejala['kode_gejala'];
+        }
+        return implode(",", $row);
+    }
 }

@@ -66,18 +66,33 @@ class ForwardChainingController extends MainController
         // $find = [];
         // $kerusakan = [];
         $check_child = $this->ForwardChainingModel->getRule(['parent_kode_gejala' => $kode_gejala]);
-        if (!empty($check_child)) {
-            foreach ($check_child as $child) {
-                $check_exist = $this->checkGejalaExist($child['child_kode_gejala'], $gejala);
-                if ($check_exist) {
-                    // $this->setConnected($child['parent_kode_gejala'], $child['child_kode_gejala']);
-                    // $this->setKerusakan($child['parent_kode_gejala'], $child['child_kode_gejala'], $child['kode_kerusakan']);
-                    if (!empty($child['kode_kerusakan'])) {
-                        $this->kerusakan[] = $child['kode_kerusakan']; // Ambil kode kerusakan dan masukkan ke variabel kerusakan
-                    }
+        foreach ($check_child as $value) {
+            $found = 0;
+            $exp_child = explode(',', $value['child_kode_gejala']);
+            foreach ($exp_child as $value_child) {
+                if (in_array($value_child, $gejala)) {
+                    $found++;
                 }
             }
+            if ($found > 0) {
+                $this->kerusakan[] = $value['kode_kerusakan'];
+            }
         }
+        // if (!empty($check_child)) {
+        //     foreach ($check_child as $child) {
+        //         $check_exist = $this->checkGejalaExist($child['child_kode_gejala'], $gejala);
+        //         if ($check_exist) {
+        //             // $this->setConnected($child['parent_kode_gejala'], $child['child_kode_gejala']);
+        //             // $this->setKerusakan($child['parent_kode_gejala'], $child['child_kode_gejala'], $child['kode_kerusakan']);
+        //             if (!empty($child['kode_kerusakan'])) {
+        //                 $this->kerusakan[] = $child['kode_kerusakan']; // Ambil kode kerusakan dan masukkan ke variabel kerusakan
+        //             }
+        //         }
+        //     }
+        // }
+        // foreach($check_child as $value) {
+        //     $check_exist = $this->checkGejalaExist($child_kode_gejala, $post)
+        // }
     }
 
     /**
@@ -118,8 +133,12 @@ class ForwardChainingController extends MainController
         $answer = [];
         $post = $this->input->post();
 
-        foreach ($post as $value) {
-            $this->bestFirstSearch($value, $post);
+        // $this->maintence->Debug($post['question']);
+
+        if (!empty($post['question'])) {
+            foreach ($post['question'] as $value) {
+                $this->bestFirstSearch($value, $post['question']);
+            }
         }
         // $data = [
         //     // 'connected' => $this->getConnected(),
@@ -148,14 +167,14 @@ class ForwardChainingController extends MainController
         $html = "";
         if ($total_kerusakan > 1) {
             $html .= "Ditemukan Lebih Dari 1 Kerusakan Kemungkinan disebabkan oleh : <br/>";
-        } else if($total_kerusakan != 0){
+        } else if ($total_kerusakan != 0) {
             $html .= "Ditemukan kerusakan disebabkan oleh : <br/>";
         } else {
             $html .= "Tidak ditemukan kerusakan <br/>";
         }
         $no = 1;
         foreach ($diagnosa as $key => $value) {
-            $html .= "<center><h4>Kerusakan ke - ".$no."</h4></center>";
+            $html .= "<center><h4>Kerusakan ke - " . $no . "</h4></center>";
             $html .= $value['kerusakan'] . " dengan penyebab kerusakan : <br/>";
             $html .= $value['penyebab_kerusakan'] . "<br/>";
             $html .= "Dengan Solusi sebagai berikut : <br/>";

@@ -3,12 +3,14 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 if (empty($rule)) {
+    $id = '';
     $parent_kode_gejala = '';
-    $child_kode_gejala = '';
+    // $child_kode_gejala = '';
     $kode_kerusakan = '';
 } else {
+    $id = $rule['id'];
     $parent_kode_gejala = $rule['parent_kode_gejala'];
-    $child_kode_gejala = $rule['child_kode_gejala'];
+    // $child_kode_gejala = $rule['child_kode_gejala'];
     $kode_kerusakan = $rule['kode_kerusakan'];
 }
 
@@ -39,23 +41,11 @@ if (empty($rule)) {
 
     <div class="form-group">
         <label>Child Kode Gejala</label>
-        <select class="form-control select2" style="width: 100%;" id="child_kode_gejala" name="child_kode_gejala">
-            <option></option>
-            <?php foreach ($gejala as $gejalas) {
-                if (!empty($rule)) {
-                    if ($child_kode_gejala == $gejalas['id']) {
-            ?>
-                        <option value="<?php echo $gejalas['id']; ?>" selected><?php echo $gejalas['kode_gejala'] . " - " . $gejalas['nama_gejala']; ?></option>
-                    <?php } else {
-                    ?>
-                        <option value="<?php echo $gejalas['id']; ?>"><?php echo $gejalas['kode_gejala'] . " - " . $gejalas['nama_gejala']; ?></option>
-                    <?php  }
-                } else {
-                    ?>
-                    <option value="<?php echo $gejalas['id']; ?>"><?php echo $gejalas['kode_gejala'] . " - " . $gejalas['nama_gejala']; ?></option>
-            <?php    }
+        <div id = "dropdown-child">
+            <?php if(!empty($child)) {
+                echo $child;
             } ?>
-        </select>
+        </div>
     </div>
 
     <div class="form-group">
@@ -89,6 +79,21 @@ if (empty($rule)) {
 <script>
     $('#parent_kode_gejala').select2({
         placeholder: "-- PILIH GEJALA ---",
+    });
+
+    $('#parent_kode_gejala').on('change', function() {
+        let _kode_gejala = $('#parent_kode_gejala').val();
+        <?php if ($id == '') {
+        ?>
+            let _url = "<?php echo base_url(); ?>rule/gejalaAjax/" + _kode_gejala + "/0";
+        <?php } else {
+        ?>
+            let _url = "<?php echo base_url(); ?>rule/gejalaAjax/" + _kode_gejala + "/<?php echo $id; ?>";
+        <?php } ?>
+
+        send((data, xhr = null) => {
+            $('#dropdown-child').html(data);
+        }, _url, "html");
     });
 
     $('#child_kode_gejala').select2({
