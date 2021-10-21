@@ -133,10 +133,10 @@ class GejalaModel extends MainModel
 
     public function destroyGejala($id)
     {
-        $aturan = $this->db->select('*')->from('aturan')->where(['kode_gejala' => $id]);
+        $aturan = $this->db->select('*')->from('aturan')->where(['parent_kode_gejala' => $id]);
         if ($aturan->count_all_results() > 0) {
-            $aturan_record = $this->db->select('*')->from('aturan')->where(['kode_gejala' => $id])->get()->result_array();
-            $this->db->where(['kode_gejala' => $id])->delete('aturan');
+            $aturan_record = $this->db->select('*')->from('aturan')->where(['parent_kode_gejala' => $id])->get()->result_array();
+            $this->db->where(['parent_kode_gejala' => $id])->delete('aturan');
         } else {
             $aturan_record = [];
         }
