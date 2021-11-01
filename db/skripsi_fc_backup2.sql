@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 01, 2021 at 04:53 AM
+-- Generation Time: Oct 18, 2021 at 09:24 AM
 -- Server version: 10.6.4-MariaDB
 -- PHP Version: 8.0.11
 
@@ -21,6 +21,17 @@ SET time_zone = "+00:00";
 -- Database: `skripsi_fc`
 --
 
+DROP TABLE `activity_log`;
+DROP TABLE `aturan`;
+DROP TABLE `solusi_kerusakan`;
+DROP TABLE `penyebab_kerusakan`;
+DROP TABLE `kerusakan`;
+DROP TABLE `gejala`;
+DROP TABLE `ms_user`;
+DROP TABLE `pegawai`;
+DROP TABLE `ms_role`;
+DROP TABLE `v_aturan`;
+
 -- --------------------------------------------------------
 
 --
@@ -37,6 +48,9 @@ CREATE TABLE `activity_log` (
   `is_success` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `activity_log`
+--
 
 -- --------------------------------------------------------
 
@@ -54,40 +68,19 @@ CREATE TABLE `aturan` (
 -- Dumping data for table `aturan`
 --
 
-INSERT INTO `aturan` (`id`, `kode_gejala`, `kode_kerusakan`) VALUES
-(1, 1, 1),
-(2, 4, 1),
-(13, 1, 2),
-(14, 5, 2),
-(15, 6, 2),
-(16, 1, 3),
-(17, 7, 3),
-(18, 8, 3),
-(19, 2, 4),
-(20, 9, 4),
-(21, 2, 5),
-(22, 10, 5),
-(23, 11, 5),
-(24, 3, 6),
-(25, 12, 6),
-(26, 13, 6),
-(27, 3, 7),
-(28, 14, 7),
-(29, 3, 8),
-(30, 15, 8),
-(31, 16, 8),
-(32, 17, 8),
-(33, 3, 9),
-(34, 18, 9),
-(35, 3, 10),
-(36, 19, 10),
-(37, 20, 10),
-(40, 3, 11),
-(41, 21, 11),
-(42, 22, 11),
-(43, 3, 12),
-(44, 23, 12),
-(45, 24, 12);
+-- INSERT INTO `aturan` (`id`, `parent_kode_gejala`, `child_kode_gejala`, `kode_kerusakan`) VALUES
+-- (27, 1, '4', 1),
+-- (28, 1, '5,6', 2),
+-- (29, 1, '7,8', 3),
+-- (30, 2, '9', 4),
+-- (31, 2, '10,11', 5),
+-- (32, 3, '12,13', 6),
+-- (33, 3, '14', 7),
+-- (34, 3, '15,16,17', 8),
+-- (35, 3, '18', 9),
+-- (36, 3, '19,20', 10),
+-- (37, 3, '21,22', 11),
+-- (38, 3, '23,24', 12);
 
 -- --------------------------------------------------------
 
@@ -130,22 +123,6 @@ INSERT INTO `gejala` (`id`, `kode_gejala`, `nama_gejala`) VALUES
 (22, 'G22', 'Terdapat Email Atau Notifikasi Peringatan Masa Aktif'),
 (23, 'G23', 'Beberapa Channel FTA (Free To Air) Gelap'),
 (24, 'G24', 'Tampil Program Yang Berbeda Dengan EPG (Electronic Program Guide)');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `gejala_perbaikan`
---
-
-CREATE TABLE `gejala_perbaikan` (
-  `id` int(11) NOT NULL,
-  `id_perbaikan` int(11) DEFAULT NULL,
-  `id_gejala` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `gejala_perbaikan`
---
 
 -- --------------------------------------------------------
 
@@ -219,7 +196,7 @@ CREATE TABLE `ms_user` (
 --
 
 INSERT INTO `ms_user` (`id`, `id_user`, `username`, `password`, `is_login`, `login_date`, `last_login`) VALUES
-(1, 1, 'admin', 'ee11cbb19052e40b07aac0ca060c23ee', 0, NULL, 'Mon Nov 1 11:51:02 WIB 2021'),
+(1, 1, 'admin', 'ee11cbb19052e40b07aac0ca060c23ee', 1, 'Mon Oct 18 13:55:55 WIB 2021', 'Thu Oct 14 18:25:30 WIB 2021');
 
 -- --------------------------------------------------------
 
@@ -241,7 +218,7 @@ CREATE TABLE `pegawai` (
 --
 
 INSERT INTO `pegawai` (`id`, `role_id`, `kode_pegawai`, `nama_pegawai`, `alamat_pegawai`, `nomor_telepon_pegawai`) VALUES
-(1, 1, 'admin', 'admin', 'admin', '111'),
+(1, 1, 'admin', 'admin', 'admin', '111');
 
 -- --------------------------------------------------------
 
@@ -272,43 +249,6 @@ INSERT INTO `penyebab_kerusakan` (`id`, `kode_kerusakan`, `penyebab_kerusakan`) 
 (13, 10, '<ul>\r\n	<li>Sinyal Yang Ada Terlalu Lemah (Dari Buku Panduan)</li>\r\n	<li>Terdapat Banyak Halangan Di Sekitar Antena (Dari Narasumber)</li>\r\n</ul>\r\n'),
 (14, 11, '<ul>\r\n	<li>Masa Paket Atau Voucher Berbayar Habis (Dari Narasumber)</li>\r\n</ul>\r\n'),
 (15, 12, '<ul>\r\n	<li>Siaran Ekslusif / Hak Siar&nbsp;(Dari Narasumber)</li>\r\n	<li>Provider Mengunci Atau Mengacak Siaran&nbsp;(Dari Narasumber)</li>\r\n	<li>Receiver Belum Update Ke Frimware Terbaru&nbsp;(Dari Narasumber)</li>\r\n</ul>\r\n');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `perbaikan`
---
-
-CREATE TABLE `perbaikan` (
-  `id` int(11) NOT NULL,
-  `nama_customer` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `alamat_customer` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `id_teknisi` int(11) DEFAULT NULL,
-  `tanggal_konsultasi` date DEFAULT NULL,
-  `tanggal_mulai_perbaikan` date DEFAULT NULL,
-  `tanggal_selesai_perbaikan` date DEFAULT NULL,
-  `id_customer_service` int(11) DEFAULT NULL,
-  `status_perbaikan` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `perbaikan`
---
--- --------------------------------------------------------
-
---
--- Table structure for table `proses_perbaikan`
---
-
-CREATE TABLE `proses_perbaikan` (
-  `id` int(11) NOT NULL,
-  `id_perbaikan` int(11) DEFAULT NULL,
-  `id_kerusakan` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `proses_perbaikan`
---
 
 -- --------------------------------------------------------
 
@@ -381,14 +321,6 @@ ALTER TABLE `gejala`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `gejala_perbaikan`
---
-ALTER TABLE `gejala_perbaikan`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `id_perbaikan` (`id_perbaikan`),
-  ADD KEY `id_gejala` (`id_gejala`);
-
---
 -- Indexes for table `kerusakan`
 --
 ALTER TABLE `kerusakan`
@@ -422,22 +354,6 @@ ALTER TABLE `penyebab_kerusakan`
   ADD KEY `kode_kerusakan` (`kode_kerusakan`);
 
 --
--- Indexes for table `perbaikan`
---
-ALTER TABLE `perbaikan`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `id_teknisi` (`id_teknisi`),
-  ADD KEY `id_customer_service` (`id_customer_service`);
-
---
--- Indexes for table `proses_perbaikan`
---
-ALTER TABLE `proses_perbaikan`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `id_perbaikan` (`id_perbaikan`),
-  ADD KEY `id_kerusakan` (`id_kerusakan`);
-
---
 -- Indexes for table `solusi_kerusakan`
 --
 ALTER TABLE `solusi_kerusakan`
@@ -452,25 +368,19 @@ ALTER TABLE `solusi_kerusakan`
 -- AUTO_INCREMENT for table `activity_log`
 --
 ALTER TABLE `activity_log`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=124;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
 -- AUTO_INCREMENT for table `aturan`
 --
 ALTER TABLE `aturan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `gejala`
 --
 ALTER TABLE `gejala`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
-
---
--- AUTO_INCREMENT for table `gejala_perbaikan`
---
-ALTER TABLE `gejala_perbaikan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `kerusakan`
@@ -488,56 +398,19 @@ ALTER TABLE `ms_role`
 -- AUTO_INCREMENT for table `ms_user`
 --
 ALTER TABLE `ms_user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `pegawai`
 --
 ALTER TABLE `pegawai`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `penyebab_kerusakan`
 --
 ALTER TABLE `penyebab_kerusakan`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
-
---
--- AUTO_INCREMENT for table `perbaikan`
---
-ALTER TABLE `perbaikan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
-
---
--- AUTO_INCREMENT for table `proses_perbaikan`
---
-ALTER TABLE `proses_perbaikan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `gejala_perbaikan`
---
-ALTER TABLE `gejala_perbaikan`
-  ADD CONSTRAINT `gejala_perbaikan_ibfk_1` FOREIGN KEY (`id_perbaikan`) REFERENCES `perbaikan` (`id`),
-  ADD CONSTRAINT `gejala_perbaikan_ibfk_2` FOREIGN KEY (`id_gejala`) REFERENCES `gejala` (`id`);
-
---
--- Constraints for table `perbaikan`
---
-ALTER TABLE `perbaikan`
-  ADD CONSTRAINT `perbaikan_ibfk_1` FOREIGN KEY (`id_teknisi`) REFERENCES `pegawai` (`id`),
-  ADD CONSTRAINT `perbaikan_ibfk_2` FOREIGN KEY (`id_customer_service`) REFERENCES `pegawai` (`id`);
-
---
--- Constraints for table `proses_perbaikan`
---
-ALTER TABLE `proses_perbaikan`
-  ADD CONSTRAINT `proses_perbaikan_ibfk_1` FOREIGN KEY (`id_perbaikan`) REFERENCES `perbaikan` (`id`),
-  ADD CONSTRAINT `proses_perbaikan_ibfk_2` FOREIGN KEY (`id_kerusakan`) REFERENCES `kerusakan` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

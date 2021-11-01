@@ -9,5 +9,5 @@ $route['rule'] = 'RuleController/index';
 $route['rule/form'] = 'RuleController/form';
 $route['rule/store'] = 'RuleController/store';
 $route['rule/edit/(:any)'] = 'RuleController/edit/$1';
-$route['rule/update/(:any)'] = 'RuleController/update/$1';
+$route['rule/update'] = 'RuleController/update';
 $route['rule/destroy/(:any)'] = 'RuleController/destroy/$1';

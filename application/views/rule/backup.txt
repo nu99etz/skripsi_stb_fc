@@ -1,0 +1,20 @@
+<div class="form-group">
+        <label>Parent Kode Gejala</label>
+        <select class="form-control select2" style="width: 100%;" id="parent_kode_gejala" name="parent_kode_gejala">
+            <option></option>
+            <?php foreach ($gejala as $gejalas) {
+                if (!empty($rule)) {
+                    if ($parent_kode_gejala == $gejalas['id']) {
+            ?>
+                        <option value="<?php echo $gejalas['id']; ?>" selected><?php echo $gejalas['kode_gejala'] . " - " . $gejalas['nama_gejala']; ?></option>
+                    <?php } else {
+                    ?>
+                        <option value="<?php echo $gejalas['id']; ?>"><?php echo $gejalas['kode_gejala'] . " - " . $gejalas['nama_gejala']; ?></option>
+                    <?php  }
+                } else {
+                    ?>
+                    <option value="<?php echo $gejalas['id']; ?>"><?php echo $gejalas['kode_gejala'] . " - " . $gejalas['nama_gejala']; ?></option>
+            <?php    }
+            } ?>
+        </select>
+    </div>

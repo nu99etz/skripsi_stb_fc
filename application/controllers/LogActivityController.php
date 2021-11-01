@@ -13,6 +13,10 @@ class LogActivityController extends MainController
         parent::__construct();
         $this->load->model('UserModel');
         $this->load->model('LogActivityModel');
+
+        if($this->session->userdata('role') != 1) {
+            redirect('/');
+        }
     }
 
     public function ajax()

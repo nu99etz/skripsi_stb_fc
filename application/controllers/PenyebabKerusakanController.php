@@ -11,6 +11,10 @@ class PenyebabKerusakanController extends MainController
         parent::__construct();
         $this->load->model('PenyebabKerusakanModel');
         $this->load->model('KerusakanModel');
+
+        if($this->session->userdata('role') > 2) {
+            redirect('/');
+        }
     }
 
     public function ajax()

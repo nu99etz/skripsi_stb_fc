@@ -10,6 +10,10 @@ class GejalaController extends MainController
     {
         parent::__construct();
         $this->load->model('GejalaModel');
+
+        if($this->session->userdata('role') > 2) {
+            redirect('/');
+        }
     }
 
     public function ajax()

@@ -57,6 +57,7 @@ class AuthController extends CI_Controller
                         $session = array(
                             'logged' => TRUE,
                             'username' => $check['id'],
+                            'id_pegawai' => $pegawai['id'],
                             'role' => $pegawai['role_id'],
                             'kode_pegawai' => $pegawai['kode_pegawai'],
                             'name' => $pegawai['nama_pegawai'],

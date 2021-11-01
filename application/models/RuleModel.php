@@ -4,65 +4,37 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class RuleModel extends MainModel
 {
-    private function Rule()
+    public function Rule()
     {
-        $gejala['table'] = 'aturan';
-        $gejala['column_search'] = [
-            'parent_kode_gejala',
-            'child_kode_gejala',
-            'kode_kerusakan'
-        ];
-        $gejala['column_order'] = [
-            null,
-            'parent_kode_gejala',
-            'child_kode_gejala',
-            'kode_kerusakan',
-            null
-        ];
-        $gejala['order'] = [
-            'id' => 'ASC'
-        ];
-        return $gejala;
-    }
-
-    public function RuleDraw()
-    {
-        $rule = $this->Rule();
-        return $this->getDataTables($rule['table'], $rule['column_search'], $rule['column_order'], $rule['order']);
-    }
-
-    public function RuleTotal()
-    {
-        $rule = $this->Rule();
-        return $this->getDataTablesCountAll($rule['table'], $rule['column_search'], $rule['column_order'], $rule['order']);
-    }
-
-    public function RuleFilter()
-    {
-        $rule = $this->Rule();
-        return $this->getDataTablesCountFiltered($rule['table'], $rule['column_search'], $rule['column_order'], $rule['order']);
+        // $sql = $this->db->select('aturan.*, gejala.kode_gejala, gejala.nama_gejala, kerusakan.kode_kerusakan, kerusakan.nama_kerusakan')->from('aturan')->join('gejala', 'aturan.kode_gejala = gejala.id', 'left')->join('kerusakan', 'aturan.kode_kerusakan = kerusakan.id', 'left')->get();
+        $sql = "select*from kerusakan where id in (select kode_kerusakan from aturan)";
+        $query = $this->db->query($sql);
+        // return $sql->result_array();
+        return $query->result_array();
     }
 
     public function storeRule()
     {
         $post = $this->input->post();
-        $this->form_validation->set_rules('parent_kode_gejala', 'Parent Kode Gejala', 'required');
-        // $this->form_validation->set_rules('child_kode_gejala', 'Child Kode Gejala', 'required');
-        $this->form_validation->set_rules('kode_kerusakan', 'Child Kode Gejala', 'required');
+        
+        $this->form_validation->set_rules('kode_kerusakan', 'Kode Kerusakan', 'required');
 
         if ($this->form_validation->run()) {
-
-            $child_kode_gejala = implode(',', $post['child_kode_gejala']);
-
-            $data_rule = [
-                'parent_kode_gejala' => $post['parent_kode_gejala'],
-                'child_kode_gejala' => $child_kode_gejala,
-                'kode_kerusakan' => $post['kode_kerusakan']
-            ];
+            
+            // $this->maintence->Debug($record);
 
             $this->db->trans_start();
 
-            $this->db->insert('aturan', $data_rule);
+            $row = [];
+            $record = [];
+            
+            for($i = 0; $i < count($post['kode_gejala']); $i ++) {
+                $row['kode_gejala'] = $post['kode_gejala'][$i];
+                $row['kode_kerusakan'] = $post['kode_kerusakan'];
+                $record[] = $row;
+            }
+
+            $this->db->insert_batch('aturan', $record);
 
             if ($this->db->trans_status() === false) {
                 $this->db->trans_rollback();
@@ -87,30 +59,32 @@ class RuleModel extends MainModel
 
     public function editRule($id)
     {
-        $rule = $this->db->select('*')->from('aturan')->where(['id' => $id])->get();
+        $rule = $this->db->select('*')->from('aturan')->where(['kode_kerusakan' => $id])->get();
         return $rule->row_array();
     }
 
-    public function updateRule($id)
+    public function updateRule()
     {
         $post = $this->input->post();
-        $this->form_validation->set_rules('parent_kode_gejala', 'Parent Kode Gejala', 'required');
-        // $this->form_validation->set_rules('child_kode_gejala', 'Child Kode Gejala', 'required');
-        $this->form_validation->set_rules('kode_kerusakan', 'Child Kode Gejala', 'required');
+        
+        $this->form_validation->set_rules('kode_kerusakan', 'Kode Kerusakan', 'required');
 
         if ($this->form_validation->run()) {
 
-            $child_kode_gejala = implode(',', $post['child_kode_gejala']);
-
-            $data_rule = [
-                'parent_kode_gejala' => $post['parent_kode_gejala'],
-                'child_kode_gejala' => $child_kode_gejala,
-                'kode_kerusakan' => $post['kode_kerusakan']
-            ];
-
             $this->db->trans_start();
 
-            $this->db->where(['id' => $id])->update('aturan', $data_rule);
+            $this->UnpairRule($post['kode_kerusakan']);
+
+            $row = [];
+            $record = [];
+            
+            for($i = 0; $i < count($post['kode_gejala']); $i ++) {
+                $row['kode_gejala'] = $post['kode_gejala'][$i];
+                $row['kode_kerusakan'] = $post['kode_kerusakan'];
+                $record[] = $row;
+            }
+
+            $this->db->insert_batch('aturan', $record);
 
             if ($this->db->trans_status() === false) {
                 $this->db->trans_rollback();
@@ -135,19 +109,33 @@ class RuleModel extends MainModel
 
     public function destroyRule($id)
     {
-        $rule = $this->db->select('*')->from('aturan')->where(['id' => $id])->get()->result_array();
+        $rule = $this->db->select('*')->from('aturan')->where(['kode_kerusakan' => $id])->get()->result_array();
 
         $post = [
             'aturan' => $rule,
         ];
 
-        $this->db->where(['id' => $id])->delete('aturan');
+        $this->db->where(['kode_kerusakan' => $id])->delete('aturan');
         $this->insertLog($this->session->userdata('name'), 'hapus-aturan', $post, 0);
     }
 
     public function getAllRule()
     {
-        $rule = $this->db->select('*')->from('rule')->get();
+        $rule = $this->db->select('*')->from('aturan')->get();
         return $rule->result_array();
+    }
+
+    public function getRule($kode_kerusakan)
+    {
+        $rule = $this->db->select('*')->from('aturan')->where(['kode_kerusakan' => $kode_kerusakan])->get();
+        return $rule->result_array();
+    }
+
+    private function UnpairRule($kode_kerusakan)
+    {
+        $where_clause = [
+            'kode_kerusakan' => $kode_kerusakan,
+        ];
+        $this->db->where($where_clause)->delete('aturan');
     }
 }

@@ -101,23 +101,44 @@ class UserModel extends MainModel
 
             $this->db->insert('pegawai', $data_pegawai);
 
-            if ($post['role_id'] != 4) {
-                $check_pegawai = $this->db->select('id')->from('pegawai')->where(['kode_pegawai' => $kode_pegawai])->get()->row_array();
-                $data_user = [
-                    'id_user' => $check_pegawai['id'],
-                    'username' => $kode_pegawai,
-                    'password' => md5('123'),
-                    'is_login' => NULL,
-                    'login_date' => NULL,
-                    'last_login' => NULL,
-                ];
+            if ($this->db->trans_status() === false) {
 
-                $this->db->insert('ms_user', $data_user);
+                $this->db->trans_rollback();
 
-                if ($this->db->trans_status() === false) {
-                    $this->db->trans_rollback();
-                } else {
-                    $this->db->trans_commit();
+                throw new Exception('Data Pegawai Gagal Diinput');
+
+            } else {
+
+                $this->db->trans_commit();
+
+                if ($post['role_id'] != 4) {
+
+                    $check_pegawai = $this->db->select('id')->from('pegawai')->where(['kode_pegawai' => $kode_pegawai])->get()->row_array();
+                   
+                    $data_user = [
+                        'id_user' => $check_pegawai['id'],
+                        'username' => $kode_pegawai,
+                        'password' => md5('123'),
+                        'is_login' => NULL,
+                        'login_date' => NULL,
+                        'last_login' => NULL,
+                    ];
+
+                    $this->db->trans_start();
+
+                    $this->db->insert('ms_user', $data_user);
+
+                    if ($this->db->trans_status() === false) {
+
+                        $this->db->trans_rollback();
+
+                        throw new Exception('Data User Gagal Diinput');
+
+                    } else {
+
+                        $this->db->trans_commit();
+                        
+                    }
                 }
             }
 
@@ -240,6 +261,12 @@ class UserModel extends MainModel
             'user' => $user
         ];
         $this->insertLog($this->session->userdata('name'), 'hapus-pegawai', $data_act, 0);
+    }
+
+    public function getAllTeknisi()
+    {
+        $sql = $this->db->select('*')->from('pegawai')->where(['role_id' => 4])->get();
+        return $sql->result_array();
     }
 
     private function User()

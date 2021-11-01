@@ -201,7 +201,11 @@ class GejalaModel extends MainModel
         $explode_gejala = explode(',', $child);
         for ($i = 0; $i < count($explode_gejala); $i++) {
             $kode_gejala = $this->getGejala($explode_gejala[$i]);
-            $row[$i] = $kode_gejala['kode_gejala'];
+            if(empty($kode_gejala)) {
+                $row[$i] = NULL;
+            } else {
+                $row[$i] = $kode_gejala['kode_gejala'];
+            }
         }
         return implode(",", $row);
     }

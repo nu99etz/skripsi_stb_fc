@@ -9,12 +9,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            Aturan
-            <small>Aturan</small>
+            Konsultasi
+            <small>Konsultasi</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="<?php echo base_url(); ?>"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="active">Aturan</li>
+            <li class="active">Konsultasi</li>
         </ol>
     </section>
 
@@ -24,18 +24,24 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <div class="col-xs-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">Aturan</h3>
+                        <h3 class="box-title">Konsultasi</h3>
                     </div>
                     <div class="box-body">
-                        <button style="float: right;" action="<?php echo base_url(); ?>rule/form" type="button" class="add btn btn-sm btn-success"><i class="fa fa-plus"></i> Tambah</button>
+                        <button style="float: right;" action="<?php echo base_url(); ?>konsultasi/form" type="button" class="add btn btn-sm btn-success"><i class="fa fa-plus"></i> Tambah</button>
                         <br />
                         <br />
-                        <table id="rule" class="table table-bordered table-striped">
+                        <table id="konsultasi" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Nama Kerusakan</th>
-                                    <th>Rule Gejala</th>
+                                    <th>Nama Customer</th>
+                                    <th>Alamat Customer</th>
+                                    <th>Nama Teknisi</th>
+                                    <th>Tanggal Konsultasi</th>
+                                    <th>Tanggal Mulai Perbaikan</th>
+                                    <th>Tanggal Selesai Perbaikan</th>
+                                    <th>Nama Customer Service</th>
+                                    <th>Status Perbaikan</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -44,8 +50,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <tfoot>
                                 <tr>
                                     <th>No</th>
-                                    <th>Nama Kerusakan</th>
-                                    <th>Rule Gejala</th>
+                                    <th>Nama Customer</th>
+                                    <th>Alamat Customer</th>
+                                    <th>Nama Teknisi</th>
+                                    <th>Tanggal Konsultasi</th>
+                                    <th>Tanggal Mulai Perbaikan</th>
+                                    <th>Tanggal Selesai Perbaikan</th>
+                                    <th>Nama Customer Service</th>
+                                    <th>Status Perbaikan</th>
                                     <th>Aksi</th>
                                 </tr>
                             </tfoot>
@@ -62,17 +74,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 <?php
 
-$data['modal_id'] = 'form-rule';
+$data['modal_id'] = 'form-konsultasi';
 $data['modal_size'] = 'lg';
-$data['modal_title'] = 'Form Aturan';
+$data['modal_title'] = 'Form Konsultasi';
+$this->load->view('_partial/modal', $data);
+
+$data['modal_id'] = 'form-notif';
+$data['modal_size'] = 'lg';
+$data['modal_title'] = 'Notifikasi Kerusakan';
 $this->load->view('_partial/modal', $data);
 
 ?>
 
 <script>
-    let _table = $('#rule');
-    let _url = "<?php echo base_url(); ?>rule/ajax";
-    let _modal = $('#form-rule');
+    let _table = $('#konsultasi');
+    let _url = "<?php echo base_url(); ?>konsultasi/ajax";
+    let _modal = $('#form-konsultasi');
+    let _modal_kerusakan = $('#form-notif');
 
     $(_table).DataTable({
         language: {
@@ -106,7 +124,7 @@ $this->load->view('_partial/modal', $data);
         order: [],
         ajax: {
             url: _url,
-            type: "GET",
+            type: "get",
         },
         lengthMenu: [
             [10, 25, 50, 100],
@@ -137,9 +155,20 @@ $this->load->view('_partial/modal', $data);
             if (data.status == 'notvalid') {
                 FailedNotif(data.messages);
             } else if (data.status == 'success') {
+
                 SuccessNotif(data.messages);
+                
                 _modal.modal('hide');
+
                 _table.DataTable().ajax.reload();
+
+                _modal_kerusakan.find('.modal-body').html(data.kerusakan);
+                _modal_kerusakan.modal('show');
+
+            } else if(data.status == 'failed') {
+
+                FailedNotif(data.messages);
+
             }
         }, _url, 'json', 'post', _data);
     });

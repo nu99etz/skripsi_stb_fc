@@ -12,38 +12,37 @@ class RuleController extends MainController
         $this->load->model('RuleModel');
         $this->load->model('GejalaModel');
         $this->load->model('KerusakanModel');
+
+        if($this->session->userdata('role') > 2) {
+            redirect('/');
+        }
     }
 
     public function ajax()
     {
-        $data = $this->RuleModel->RuleDraw();
+        $data = $this->RuleModel->Rule();
+        $no = 1;
         $record = [];
-        $no = $_POST['start'];
-        foreach ($data as $value) {
-            $no++;
+        foreach ($data as $key => $value) {
             $row = [];
             $row[] = $no;
-            $parent_gejala = $this->GejalaModel->getGejala($value['parent_kode_gejala']);
-            $child_gejala = $this->GejalaModel->getChildGejalaKode($value['child_kode_gejala']);
-            if ($value['kode_kerusakan'] == NULL) {
-                $kode_kerusakan['kode_kerusakan'] = '-';
-            } else {
-                $kode_kerusakan = $this->KerusakanModel->getKerusakan($value['kode_kerusakan']);
+            $row[] = $value['kode_kerusakan'];
+            $rule = $this->RuleModel->getRule($value['id']);
+            $rule_ = [];
+            foreach($rule as $value) {
+                $gejala = $this->GejalaModel->getGejala($value['kode_gejala']);
+                $rule_[] = $gejala['kode_gejala'];
             }
-            $row[] = $parent_gejala['kode_gejala'];
-            $row[] = $child_gejala;
-            $row[] = $kode_kerusakan['kode_kerusakan'];
-            $button = '<button type="button" name="update" url="' . base_url() . 'rule/edit/' . $value['id'] . '" class="edit btn btn-warning btn-sm"><i class = "fa fa-edit"></i></button> ';
-            $button .= '<button type="button" name="delete" url="' . base_url() . 'rule/destroy/' . $value['id'] . '" class="delete btn btn-danger btn-sm"><i class = "fa fa-trash"></i></button> ';
+            $row[] = implode('->', $rule_);
+            $button = '<button type="button" name="update" url="' . base_url() . 'rule/edit/' . $value['kode_kerusakan'] . '" class="edit btn btn-warning btn-sm"><i class = "fa fa-edit"></i></button> ';
+            $button .= '<button type="button" name="delete" url="' . base_url() . 'rule/destroy/' . $value['kode_kerusakan'] . '" class="delete btn btn-danger btn-sm"><i class = "fa fa-trash"></i></button> ';
             $row[] = $button;
+            $no++;
             $record[] = $row;
         }
 
         $response = [
-            'draw' => $_POST['draw'],
-            'recordsTotal' => $this->RuleModel->RuleTotal(),
-            'recordsFiltered' => $this->RuleModel->RuleFilter(),
-            'data' => $record,
+            'data' => $record
         ];
 
         echo json_encode($response);
@@ -61,42 +60,47 @@ class RuleController extends MainController
     {
         $data = [
             'action' => base_url() . 'rule/store',
-            'gejala' => $this->GejalaModel->getAllGejala(),
-            'kerusakan' => $this->KerusakanModel->getLatestKerusakan('aturan')
+            'gejala' => $this->RulePair(),
+            'kerusakan' => $this->KerusakanModel->getAllKerusakan(),
+            'kode_gejala' => $this->GejalaModel->getAllGejala()
         ];
         $this->load->view('rule/form', $data);
     }
 
-    public function gejalaIFexist($gejala, $id)
+    /**
+     * 
+     * Fungsi Untuk Mengambil Aturan Yang Berkaitan
+     * 
+     */
+    public function RulePair($kode_kerusakan = null)
     {
-        if ($id != 0) {
-            $rule  = $this->RuleModel->editRule($id);
-            $rule_id = $id;
-            $gejala = $this->GejalaModel->getAllGejala();
-        } else {
-            $rule = null;
-            $rule_id = null;
-            $gejala = $this->GejalaModel->GejalaIFExist($rule_id);
+
+        $gejala = $this->GejalaModel->getAllGejala();
+
+        if (!empty($kode_kerusakan)) {
+            $pair_rule = $this->RuleModel->getRule($kode_kerusakan);
+
+            $rule_gejala = [];
+            foreach ($pair_rule as $rule) {
+                $rule_gejala[] = $rule['kode_gejala'];
+            }
         }
 
-        // $this->maintence->Debug($gejala);
-
         $html = '';
-    
+
         foreach ($gejala as $value) {
             $html .= "<div class='checkbox'>";
             $html .= "<label>";
-            if (!empty($rule)) {
-                $child = explode(',', $rule['child_kode_gejala']);
-                if (in_array($value['id'], $child)) {
-                    $html .= "<input type='checkbox' name='child_kode_gejala[]' id='" . $value['id'] . "'value='" . $value['id'] . "' checked>";
+            if (!empty($rule_gejala)) {
+                if (in_array($value['id'], $rule_gejala)) {
+                    $html .= "<input type='checkbox' name='kode_gejala[]' id='" . $value['id'] . "'value='" . $value['id'] . "' checked>";
                     $html .= $value['kode_gejala'] . "-" . $value['nama_gejala'];
                 } else {
-                    $html .= "<input type='checkbox' name='child_kode_gejala[]' id='" . $value['id'] . "'value='" . $value['id'] . "'>";
+                    $html .= "<input type='checkbox' name='kode_gejala[]' id='" . $value['id'] . "'value='" . $value['id'] . "'>";
                     $html .= $value['kode_gejala'] . "-" . $value['nama_gejala'];
                 }
             } else {
-                $html .= "<input type='checkbox' name='child_kode_gejala[]' id='" . $value['id'] . "'value='" . $value['id'] . "'>";
+                $html .= "<input type='checkbox' name='kode_gejala[]' id='" . $value['id'] . "'value='" . $value['id'] . "'>";
                 $html .= $value['kode_gejala'] . "-" . $value['nama_gejala'];
             }
             $html .= "</label>";
@@ -104,12 +108,6 @@ class RuleController extends MainController
         }
 
         return $html;
-    }
-
-    public function ajax_gejala($gejala, $id)
-    {
-        $child_gejala = $this->gejalaIFexist($gejala, $id);
-        echo $child_gejala;
     }
 
     public function store()
@@ -137,23 +135,21 @@ class RuleController extends MainController
     public function edit($id)
     {
         $rule = $this->RuleModel->editRule($id);
-        $gejala = $this->GejalaModel->getAllGejala();
+        $gejala = $this->RulePair($rule['kode_kerusakan']);
         $kerusakan = $this->KerusakanModel->getAllKerusakan();
-        $html_child = $this->gejalaIFexist($rule['parent_kode_gejala'], $rule['id']);
 
         $data = [
-            'action' => base_url() . 'rule/update/' . $id,
+            'action' => base_url() . 'rule/update',
             'rule' => $rule,
             'gejala' => $gejala,
             'kerusakan' => $kerusakan,
-            'child' => $html_child
         ];
         $this->load->view('rule/form', $data);
     }
 
-    public function update($id)
+    public function update()
     {
-        $update = $this->RuleModel->updateRule($id);
+        $update = $this->RuleModel->updateRule();
         if ($update['status'] == 'notvalid') {
             $response = [
                 'status' => 'notvalid',

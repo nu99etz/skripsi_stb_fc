@@ -10,170 +10,228 @@ use PhpOffice\PhpSpreadsheet\Reader\Csv;
 class MainController extends CI_Controller
 {
 
-  public function __construct()
-  {
+    public function __construct()
+    {
 
-    parent::__construct();
+        parent::__construct();
 
-    if (!$this->session->userdata('logged')) {
-      redirect('gate/');
+        if (!$this->session->userdata('logged')) {
+            redirect('gate/');
+        }
     }
-  }
 
-  public function getLayout($layout, $data = null)
-  {
-    $data['sidebar'] = [
-      'Dashboard' => [
-        'name' => 'Dashboard',
-        'icon' => 'fa fa-dashboard',
-        'url' => base_url()
-      ],
+    public function getLayout($layout, $data = null)
+    {
 
-      'Master User' => [
-        'name' => 'Master User',
-        'icon' => 'fa fa-user',
-        'child' => [
-          'Master-1' => [
-            'name' => 'Data Pegawai',
-            'icon' => 'fa fa-user',
-            'url' => base_url() . 'pegawai'
-          ],
-          'Master-2' => [
-            'name' => 'Data User',
-            'icon' => 'fa fa-user',
-            'url' => base_url() . 'user'
-          ],
-        ]
-      ],
+        if ($this->session->userdata('role') == 1) {
 
-      'Master Kerusakan' => [
-        'name' => 'Master Kerusakan STB',
-        'icon' => 'fa fa-cog',
-        'child' => [
-          'Master-1' => [
-            'name' => 'Data Gejala',
-            'icon' => 'fa fa-cog',
-            'url' => base_url() . 'gejala'
-          ],
-          'Master-2' => [
-            'name' => 'Data Kerusakan',
-            'icon' => 'fa fa-cog',
-            'url' => base_url() . 'kerusakan'
-          ],
-          'Master-3' => [
-            'name' => 'Data Penyebab Kerusakan',
-            'icon' => 'fa fa-cog',
-            'url' => base_url() . 'penyebab_kerusakan'
-          ],
-          'Master-4' => [
-            'name' => 'Data Solusi Kerusakan',
-            'icon' => 'fa fa-cog',
-            'url' => base_url() . 'solusi_kerusakan'
-          ],
-          // 'Master-2' => [
-          //   'name' => 'Data User',
-          //   'icon' => 'fa fa-user',
-          //   'url' => base_url() . 'user'
-          // ],
-        ]
-      ],
+            $data['sidebar'] = [
+                'Dashboard' => [
+                    'name' => 'Dashboard',
+                    'icon' => 'fa fa-dashboard',
+                    'url' => base_url()
+                ],
 
-      'Aturan' => [
-        'name' => 'Aturan',
-        'icon' => 'fa fa-tree',
-        'url' => base_url(). 'rule'
-      ],
+                'Master User' => [
+                    'name' => 'Master User',
+                    'icon' => 'fa fa-user',
+                    'child' => [
+                        'Master-1' => [
+                            'name' => 'Data Pegawai',
+                            'icon' => 'fa fa-user',
+                            'url' => base_url() . 'pegawai'
+                        ],
+                        'Master-2' => [
+                            'name' => 'Data User',
+                            'icon' => 'fa fa-user',
+                            'url' => base_url() . 'user'
+                        ],
+                    ]
+                ],
 
-      'Log' => [
-        'name' => 'Activity Log',
-        'icon' => 'fa fa-database',
-        'url' => base_url(). 'log'
-      ],
+                'Master Kerusakan' => [
+                    'name' => 'Master Kerusakan STB',
+                    'icon' => 'fa fa-cog',
+                    'child' => [
+                        'Master-1' => [
+                            'name' => 'Data Gejala',
+                            'icon' => 'fa fa-cog',
+                            'url' => base_url() . 'gejala'
+                        ],
+                        'Master-2' => [
+                            'name' => 'Data Kerusakan',
+                            'icon' => 'fa fa-cog',
+                            'url' => base_url() . 'kerusakan'
+                        ],
+                        'Master-3' => [
+                            'name' => 'Data Penyebab Kerusakan',
+                            'icon' => 'fa fa-cog',
+                            'url' => base_url() . 'penyebab_kerusakan'
+                        ],
+                        'Master-4' => [
+                            'name' => 'Data Solusi Kerusakan',
+                            'icon' => 'fa fa-cog',
+                            'url' => base_url() . 'solusi_kerusakan'
+                        ],
+                    ]
+                ],
 
-      'Question' => [
-        'name' => 'Konsultasi',
-        'icon' => 'fa fa-info',
-        'url' => base_url() . 'question'
-      ],
+                'Aturan' => [
+                    'name' => 'Aturan',
+                    'icon' => 'fa fa-tree',
+                    'url' => base_url() . 'rule'
+                ],
 
-      // 'Data Uji' => [
-      //   'name' => 'Data Uji',
-      //   'icon' => 'fa fa-database',
-      //   'child' => [
-      //     'Master-1' => [
-      //       'name' => 'Data Uji',
-      //       'icon' => 'fa fa-database',
-      //       'url' => base_url() . 'data_uji'
-      //     ],
-      //     'Master-2' => [
-      //       'name' => 'Data Uji NaiveBayes',
-      //       'icon' => 'fa fa-database',
-      //       'url' => base_url() . 'data_uji_nb'
-      //     ],
-      //   ]
-      // ],
-      // 'User' => [
-      //   'name' => 'User',
-      //   'icon' => 'fa fa-user',
-      //   'url' => '#'
-      // ],
-    ];
-    $this->load->view('_partial/header', $data);
-    $this->load->view('_partial/navbar', $data);
-    $this->load->view('_partial/sidebar', $data);
-    if (is_array($layout)) {
-      foreach ($layout as $layouts) {
-        $this->load->view($layouts, $data);
-      }
-    } else {
-      $this->load->view($layout, $data);
-    }
-    $this->load->view('_partial/footer', $data);
-  }
+                'Log' => [
+                    'name' => 'Activity Log',
+                    'icon' => 'fa fa-database',
+                    'url' => base_url() . 'log'
+                ],
 
-  public function import_excel($files, $type = 'csv')
-  {
-    $file_mimes = array(
-      'application/octet-stream',
-      'application/vnd.ms-excel',
-      'application/x-csv',
-      'text/x-csv',
-      'text/csv',
-      'application/csv',
-      'application/excel',
-      'application/vnd.msexcel',
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    );
+                'Question' => [
+                    'name' => 'Konsultasi',
+                    'icon' => 'fa fa-info',
+                    'url' => base_url() . 'konsultasi'
+                ],
+            ];
+        } else if ($this->session->userdata('role') == 2) {
 
-    if (empty($files['name'])) {
-      $response = array(
-        'status' => 'file not found'
-      );
-    } else if (!empty($files)) {
-      if (isset($files['name']) && in_array($files['type'], $file_mimes)) {
-        $arr_file = explode(".", $files['name']);
-        $extension = end($arr_file);
+            $data['sidebar'] = [
+                'Dashboard' => [
+                    'name' => 'Dashboard',
+                    'icon' => 'fa fa-dashboard',
+                    'url' => base_url()
+                ],
 
-        if ($extension == 'csv') {
-          $reader = new Csv();
-        } else if ($extension == 'xlsx') {
-          $reader = new Xlsx();
+                'Master User' => [
+                    'name' => 'Master User',
+                    'icon' => 'fa fa-user',
+                    'child' => [
+                        'Master-1' => [
+                            'name' => 'Data Pegawai',
+                            'icon' => 'fa fa-user',
+                            'url' => base_url() . 'pegawai'
+                        ],
+                        'Master-2' => [
+                            'name' => 'Data User',
+                            'icon' => 'fa fa-user',
+                            'url' => base_url() . 'user'
+                        ],
+                    ]
+                ],
+
+                'Master Kerusakan' => [
+                    'name' => 'Master Kerusakan STB',
+                    'icon' => 'fa fa-cog',
+                    'child' => [
+                        'Master-1' => [
+                            'name' => 'Data Gejala',
+                            'icon' => 'fa fa-cog',
+                            'url' => base_url() . 'gejala'
+                        ],
+                        'Master-2' => [
+                            'name' => 'Data Kerusakan',
+                            'icon' => 'fa fa-cog',
+                            'url' => base_url() . 'kerusakan'
+                        ],
+                        'Master-3' => [
+                            'name' => 'Data Penyebab Kerusakan',
+                            'icon' => 'fa fa-cog',
+                            'url' => base_url() . 'penyebab_kerusakan'
+                        ],
+                        'Master-4' => [
+                            'name' => 'Data Solusi Kerusakan',
+                            'icon' => 'fa fa-cog',
+                            'url' => base_url() . 'solusi_kerusakan'
+                        ],
+                    ]
+                ],
+
+                'Aturan' => [
+                    'name' => 'Aturan',
+                    'icon' => 'fa fa-tree',
+                    'url' => base_url() . 'rule'
+                ],
+
+                'Question' => [
+                    'name' => 'Konsultasi',
+                    'icon' => 'fa fa-info',
+                    'url' => base_url() . 'konsultasi'
+                ],
+            ];
+        } else if ($this->session->userdata('role') == 3) {
+
+            $data['sidebar'] = [
+                'Dashboard' => [
+                    'name' => 'Dashboard',
+                    'icon' => 'fa fa-dashboard',
+                    'url' => base_url()
+                ],
+
+                'Question' => [
+                    'name' => 'Konsultasi',
+                    'icon' => 'fa fa-info',
+                    'url' => base_url() . 'konsultasi'
+                ],
+            ];
         }
 
-        $spreadsheet = $reader->load($files['tmp_name']);
-
-        $sheetData = $spreadsheet->getActiveSheet()->toArray();
-        $response = array(
-          'status' => 'success',
-          'data' => $sheetData
-        );
-      }
+        $this->load->view('_partial/header', $data);
+        $this->load->view('_partial/navbar', $data);
+        $this->load->view('_partial/sidebar', $data);
+        if (is_array($layout)) {
+            foreach ($layout as $layouts) {
+                $this->load->view($layouts, $data);
+            }
+        } else {
+            $this->load->view($layout, $data);
+        }
+        $this->load->view('_partial/footer', $data);
     }
-    return $response;
-  }
 
-  public function error404()
-  {
-    $this->getLayout('error404');
-  }
+    public function import_excel($files, $type = 'csv')
+    {
+        $file_mimes = array(
+            'application/octet-stream',
+            'application/vnd.ms-excel',
+            'application/x-csv',
+            'text/x-csv',
+            'text/csv',
+            'application/csv',
+            'application/excel',
+            'application/vnd.msexcel',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        );
+
+        if (empty($files['name'])) {
+            $response = array(
+                'status' => 'file not found'
+            );
+        } else if (!empty($files)) {
+            if (isset($files['name']) && in_array($files['type'], $file_mimes)) {
+                $arr_file = explode(".", $files['name']);
+                $extension = end($arr_file);
+
+                if ($extension == 'csv') {
+                    $reader = new Csv();
+                } else if ($extension == 'xlsx') {
+                    $reader = new Xlsx();
+                }
+
+                $spreadsheet = $reader->load($files['tmp_name']);
+
+                $sheetData = $spreadsheet->getActiveSheet()->toArray();
+                $response = array(
+                    'status' => 'success',
+                    'data' => $sheetData
+                );
+            }
+        }
+        return $response;
+    }
+
+    public function error404()
+    {
+        $this->getLayout('error404');
+    }
 }

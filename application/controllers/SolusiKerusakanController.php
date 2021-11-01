@@ -11,6 +11,10 @@ class SolusiKerusakanController extends MainController
         parent::__construct();
         $this->load->model('SolusiKerusakanModel');
         $this->load->model('KerusakanModel');
+
+        if($this->session->userdata('role') > 2) {
+            redirect('/');
+        }
     }
 
     public function ajax()
