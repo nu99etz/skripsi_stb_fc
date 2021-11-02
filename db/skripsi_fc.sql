@@ -219,7 +219,7 @@ CREATE TABLE `ms_user` (
 --
 
 INSERT INTO `ms_user` (`id`, `id_user`, `username`, `password`, `is_login`, `login_date`, `last_login`) VALUES
-(1, 1, 'admin', 'ee11cbb19052e40b07aac0ca060c23ee', 0, NULL, 'Mon Nov 1 11:51:02 WIB 2021'),
+(1, 1, 'admin', 'ee11cbb19052e40b07aac0ca060c23ee', 0, NULL, 'Mon Nov 1 11:51:02 WIB 2021');
 
 -- --------------------------------------------------------
 
@@ -241,7 +241,7 @@ CREATE TABLE `pegawai` (
 --
 
 INSERT INTO `pegawai` (`id`, `role_id`, `kode_pegawai`, `nama_pegawai`, `alamat_pegawai`, `nomor_telepon_pegawai`) VALUES
-(1, 1, 'admin', 'admin', 'admin', '111'),
+(1, 1, 'admin', 'admin', 'admin', '111');
 
 -- --------------------------------------------------------
 
