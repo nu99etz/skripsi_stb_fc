@@ -50,39 +50,58 @@ class KonsultasiController extends ForwardChainingController
         return $this->load->view('fc/form', $data);
     }
 
-    private function renderHTML($id = null)
+    private function renderHTML($id, $param)
     {
-        if(empty($id)) {
+        if (empty($id)) {
             $gejala = $this->ForwardChainingModel->rootQuestion();
         } else {
             $gejala = $this->ForwardChainingModel->rootQuestion($id);
         }
 
-        //$this->maintence->Debug($gejala);
+        // $this->maintence->Debug($gejala);
 
         $html = '';
         $html .= '<form action="#" id="form" method="post" enctype="multipart/form-data">';
         $html .= '<div class="form-group">';
-        if(!empty($gejala['kerusakan'])) {
-            $html .= '<b><h3>Ditemukan Kerusakan</h3></b>';
-            $html .= $gejala['kerusakan'][0]['kode_kerusakan'] . ' - '.$gejala['kerusakan'][0]['nama_kerusakan'];
-            $html .= '<div class="form-group">';
-            $html .= '<button type="button" id="simpan" class="next btn btn-success"><i class="fa fa-save"></i> Simpan Kerusakan</button>';
-            $html .= '&nbsp; <button type="reset" id="ulang" class="btn btn-warning"><i class="fa fa-refresh"></i> Reset</button>';
-            $html .= '</div>';
+        if (!empty($gejala['kerusakan'])) {
+            if ($param == "next") {
+                if (!empty($gejala['gejala'])) {
+                    $cnt = count($gejala['gejala']);
+                    foreach ($gejala['gejala'] as $key => $value) {
+                        $html .= '<div class="radio">';
+                        $html .= '<label>';
+                        $html .= '<input type = "radio" id = "id_gejala" name = "id_gejala" value = ' . $value['id'] . '>' . $value['kode_gejala'] . ' - ' . $value['nama_gejala'];
+                        $html .= '</label>';
+                        $html .= '</div>';
+                    }
+                    $html .= '<div class="form-group">';
+                    $html .= '<button type="button" action = "'. base_url()."konsultasi/stopquestion/".$gejala['gejala'][$cnt - 1]['id'].'/stop" id="stop" class="next btn btn-success"><i class="fa fa-search"></i> Cek Kerusakan</button>';
+                    $html .= ' &nbsp; <button type="reset" id="ulang" class="btn btn-warning"><i class="fa fa-refresh"></i> Reset</button>';
+                    $html .= '</div>';
+                } else {
+                    $html .= '<b><h3>Ditemukan Kerusakan</h3></b>';
+                    $html .= $gejala['kerusakan'][0]['kode_kerusakan'] . ' - ' . $gejala['kerusakan'][0]['nama_kerusakan'];
+                    $html .= '<div class="form-group">';
+                    $html .= '<button type="button" id="simpan" class="next btn btn-success"><i class="fa fa-save"></i> Simpan Kerusakan</button>';
+                    $html .= '&nbsp; <button type="reset" action = "' . base_url() . "konsultasi/form" . '" id="ulang" class="btn btn-warning"><i class="fa fa-refresh"></i> Ulangi</button>';
+                    $html .= '</div>';
+                }
+            } else if ($param == 'stop') {
+                $html .= '<b><h3>Kemungkinan Ditemukan Kerusakan</h3></b>';
+                $html .= $gejala['kerusakan'][0]['kode_kerusakan'] . ' - ' . $gejala['kerusakan'][0]['nama_kerusakan'];
+                $html .= '<div class="form-group">';
+                $html .= '<button type="button" id="simpan" class="next btn btn-success"><i class="fa fa-save"></i> Simpan Kerusakan</button>';
+                $html .= '&nbsp; <button type="reset" action = "' . base_url() . "konsultasi/form" . '" id="ulang" class="btn btn-warning"><i class="fa fa-refresh"></i> Ulangi</button>';
+                $html .= '</div>';
+            }
         } else {
-            foreach($gejala['gejala'] as $key => $value) {
+            foreach ($gejala['gejala'] as $key => $value) {
                 $html .= '<div class="radio">';
                 $html .= '<label>';
-                $html .= '<input type = "radio" id = "id_gejala" name = "id_gejala" value = '. $value['id'] . '>'. $value['kode_gejala'] . ' - '. $value['nama_gejala'];
+                $html .= '<input type = "radio" id = "id_gejala" name = "id_gejala" value = ' . $value['id'] . '>' . $value['kode_gejala'] . ' - ' . $value['nama_gejala'];
                 $html .= '</label>';
                 $html .= '</div>';
             }
-
-            $html .= '<div class="form-group">';
-            $html .= '<button type="button" id="simpan" class="next btn btn-success"><i class="fa fa-search"></i> Cek Kerusakan</button>';
-            $html .= ' &nbsp; <button type="reset" id="ulang" class="btn btn-warning"><i class="fa fa-refresh"></i> Reset</button>';
-            $html .= '</div>';
         }
 
         return $html;
@@ -91,15 +110,24 @@ class KonsultasiController extends ForwardChainingController
     public function konsultasiForm()
     {
         $data = [
-            'gejala' => $this->renderHTML(),
+            'gejala' => $this->renderHTML(null, 'next'),
         ];
         return $this->getLayout('konsultasi/form', $data);
     }
 
-    public function getNextQuestion($id)
+    public function getNextQuestion($id, $next)
     {
         $response = [
-            'gejala' => $this->renderHTML($id),
+            'gejala' => $this->renderHTML($id, $next),
+        ];
+
+        echo json_encode($response);
+    }
+
+    public function getStopQuestion($id, $stop)
+    {
+        $response = [
+            'gejala' => $this->renderHTML($id, $stop),
         ];
 
         echo json_encode($response);

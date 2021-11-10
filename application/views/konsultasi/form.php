@@ -38,22 +38,31 @@ defined('BASEPATH') or exit('No direct script access allowed');
 </div>
 
 <script>
-    $(document).on('click', '.next', function() {
+    $(document).on('change', 'input[name="id_gejala"]:checked', function() {
+        
+        let _url = "<?php echo base_url(); ?>konsultasi/nextquestion/" + _id + "/next";
 
-        let _id = $('input[name="id_gejala"]:checked').val();
-
-        if (_id == undefined) {
-
-            FailedNotif('Silahkan Memilih Salah Satu Gejala');
-
-        } else {
-
-            let _url = "<?php echo base_url(); ?>konsultasi/nextquestion/" + _id;
-
-            send((data, xhr = null) => {
-                $('#gejala').html(data.gejala);
-            }, _url, 'json', 'get');
-        }
+        send((data, xhr = null) => {
+            $('#gejala').html(data.gejala);
+        }, _url, 'json', 'get');
 
     });
+
+    $(document).on('click', '#stop', function() {
+        let _url = $(this).attr('action');
+
+        send((data, xhr = null) => {
+            $('#gejala').html(data.gejala);
+        }, _url, 'json', 'get');
+
+    });
+
+    $(document).on('click', '#ulang', function() {
+        let _url = $(this).attr('action');
+        window.location.href = _url;
+    });
+
+    window.onbeforeunload = function(e) {
+        return 'Apakah Konsultasi Sudah Selesai ?';
+    };
 </script>

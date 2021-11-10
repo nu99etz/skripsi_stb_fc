@@ -186,12 +186,32 @@ class ForwardChainingModel extends MainModel
 
                     $gejala_[] = $row;
                 }
-                
+
+                $sql_rule = $this->db->select('*')->from('rule_breadth')->where(['parent_kode_gejala' => $id])->or_where(['child_kode_gejala' => $id])->get();
+
+                // $this->maintence->Debug($sql_rule->result_array());
+
+                foreach ($sql_rule->result_array() as $key => $value) {
+                    $row = [];
+
+                    if ($value['parent_kode_gejala'] > 4) {
+                        $kerusakan_ = $this->db->select('*')->from('kerusakan')->where(['id' => $value['kode_kerusakan']])->get()->row_array();
+
+                        if (!empty($kerusakan_)) {
+                            $row['id'] = $kerusakan_['id'];
+                            $row['kode_kerusakan'] = $kerusakan_['kode_kerusakan'];
+                            $row['nama_kerusakan'] = $kerusakan_['nama_kerusakan'];
+
+                            $kerusakan[] = $row;
+                        }
+
+                    }
+                }
             } else {
 
-                $sql_rule = $this->db->select('*')->from('rule_breadth')->where(['child_kode_gejala' => $id])->get();
+                $sql_rule = $this->db->select('*')->from('rule_breadth')->where(['parent_kode_gejala' => $id])->or_where(['child_kode_gejala' => $id])->get();
 
-                foreach($sql_rule->result_array() as $key => $value) {
+                foreach ($sql_rule->result_array() as $key => $value) {
                     $row = [];
 
                     $kerusakan_ = $this->db->select('*')->from('kerusakan')->where(['id' => $value['kode_kerusakan']])->get()->row_array();
@@ -202,7 +222,6 @@ class ForwardChainingModel extends MainModel
 
                     $kerusakan[] = $row;
                 }
-
             }
 
             return [
