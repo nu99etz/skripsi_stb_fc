@@ -39,13 +39,20 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 <script>
     $(document).on('change', 'input[name="id_gejala"]:checked', function() {
-        
-        let _url = "<?php echo base_url(); ?>konsultasi/nextquestion/" + _id + "/next";
+        let _id = $('input[name="id_gejala"]:checked').val();
 
-        send((data, xhr = null) => {
-            $('#gejala').html(data.gejala);
-        }, _url, 'json', 'get');
+        if (_id == undefined) {
 
+            FailedNotif('Silahkan Memilih Salah Satu Gejala');
+
+        } else {
+
+            let _url = "<?php echo base_url(); ?>konsultasi/nextquestion/" + _id + "/next";
+
+            send((data, xhr = null) => {
+                $('#gejala').html(data.gejala);
+            }, _url, 'json', 'get');
+        }
     });
 
     $(document).on('click', '#stop', function() {
@@ -65,4 +72,5 @@ defined('BASEPATH') or exit('No direct script access allowed');
     window.onbeforeunload = function(e) {
         return 'Apakah Konsultasi Sudah Selesai ?';
     };
+    
 </script>
