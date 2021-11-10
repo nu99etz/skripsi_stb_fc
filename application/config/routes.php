@@ -58,7 +58,7 @@ require(APPPATH. "routes/master_user.php");
 require(APPPATH. "routes/log.php");
 require(APPPATH. "routes/master_kerusakan.php");
 require(APPPATH. "routes/rule.php");
-require(APPPATH. "routes/fc.php");
+require(APPPATH. "routes/konsultasi.php");
 
 $route['default_controller'] = 'DashboardController/index';
 

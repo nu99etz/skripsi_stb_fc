@@ -8,7 +8,7 @@
                 <td>Tanggal Konsultasi : </td>
             </tr>
             <tr>
-                <td>Kode Pegawai / Nama Teknisi : </td>
+                <td>Nomor Telepon :  </td>
             </tr>
         </table>
     </div>
@@ -16,13 +16,13 @@
     <div class="col-md-6">
         <table>
             <tr>
-                <td><?php echo $view['perbaikan']['nama_customer']; ?></td>
+                <td><?php echo $view['konsultasi']['nama_customer']; ?></td>
             </tr>
             <tr>
-                <td><?php echo $view['perbaikan']['tanggal_konsultasi']; ?></td>
+                <td><?php echo $view['konsultasi']['tanggal_konsultasi']; ?></td>
             </tr>
             <tr>
-                <td><?php echo $view['teknisi']['kode_pegawai']; ?> / <?php echo $view['teknisi']['nama_teknisi']; ?></td>
+                <td><?php echo $view['konsultasi']['no_telepon_customer']; ?></td>
             </tr>
         </table>
     </div>
@@ -62,7 +62,7 @@
     </thead>
     <tbody>
         <?php $no = 1;
-        foreach ($view['proses_perbaikan'] as $key => $value) {
+        foreach ($view['konsultasi_perbaikan'] as $key => $value) {
         ?>
             <tr>
                 <td><?php echo $no; ?></td>

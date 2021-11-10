@@ -1,36 +1,60 @@
 START TRANSACTION;
 
 DROP TABLE proses_perbaikan;
-DROP TABLE gejala_perbaikan;
+DROP TABLE gejala_konsultasi;
 DROP TABLE perbaikan;
 
-create table perbaikan (
+create table rule_breadth (
     id int AUTO_INCREMENT PRIMARY KEY,
-    nama_customer varchar(255),
-    alamat_customer text,
-    id_teknisi int,
-    tanggal_konsultasi date,
-    tanggal_mulai_perbaikan date,
-    tanggal_selesai_perbaikan date,
-    id_customer_service int,
-    status_perbaikan int,
-    FOREIGN KEY(id_teknisi) REFERENCES pegawai(id),
-    FOREIGN KEY(id_customer_service) REFERENCES pegawai(id)
+    parent_kode_gejala int,
+    child_kode_gejala int,
+    kode_kerusakan int,
+    FOREIGN KEY(parent_kode_gejala) REFERENCES gejala(id),
+    FOREIGN KEY(child_kode_gejala) REFERENCES gejala(id),
+    FOREIGN KEY(kode_kerusakan) REFERENCES kerusakan(id)
 );
 
-create table gejala_perbaikan (
+create table konsultasi_gejala (
     id int AUTO_INCREMENT PRIMARY KEY,
-    id_perbaikan int,
+    id_customer_service int,
     id_gejala int,
-    FOREIGN KEY(id_perbaikan) REFERENCES perbaikan(id),
+    FOREIGN KEY(id_customer_service) REFERENCES pegawai(id),
     FOREIGN KEY(id_gejala) REFERENCES gejala(id)
 );
 
-create table proses_perbaikan (
+create table konsultasi (
     id int AUTO_INCREMENT PRIMARY KEY,
-    id_perbaikan int,
+    id_customer_service int,
+    nama_customer varchar(255),
+    alamat_customer text,
+    tanggal_konsultasi date,
+    FOREIGN KEY(id_customer_service) REFERENCES pegawai(id)
+)
+
+create table perbaikan (
+    id int AUTO_INCREMENT PRIMARY KEY,
+    id_konsultasi int,
+    id_teknisi int,
+    tanggal_mulai_perbaikan date,
+    tanggal_selesai_perbaikan date,
+    status_perbaikan int,
+    FOREIGN KEY(id_teknisi) REFERENCES pegawai(id),
+    FOREIGN KEY(id_konsultasi) REFERENCES konsultasi(id),
+);
+
+create table gejala_konsultasi (
+    id int AUTO_INCREMENT PRIMARY KEY,
+    id_konsultasi int,
+    id_gejala int,
+    FOREIGN KEY(id_konsultasi) REFERENCES konsultasi(id),
+    FOREIGN KEY(id_gejala) REFERENCES gejala(id)
+);
+
+create table konsultasi_kerusakan (
+    id int AUTO_INCREMENT PRIMARY KEY,
+    id_konsultasi int,
     id_kerusakan int,
-    FOREIGN KEY(id_perbaikan) REFERENCES perbaikan(id),
+    FOREIGN KEY(id_konsultasi) REFERENCES konsultasi(id),
     FOREIGN KEY(id_kerusakan) REFERENCES kerusakan(id)
 );
 

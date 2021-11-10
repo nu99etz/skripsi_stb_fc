@@ -29,14 +29,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </div>
 
     <div class="form-group">
-        <label>Nama Teknisi</label>
-        <select class="form-control select2" style="width: 100%;" id="nama_teknisi" name="nama_teknisi">
-            <option></option>
-            <?php foreach ($teknisi as $value) {
-            ?>
-                <option value="<?php echo $value['id']; ?>"><?php echo $value['kode_pegawai']; ?> - <?php echo $value['nama_pegawai']; ?></option>
-            <?php   } ?>
-        </select>
+        <label for="no_telepon_customer">Nomor Telepon Customer</label>
+        <input type="text" class="form-control" name="no_telepon_customer" id="no_telepon_customer" placeholder="Nomor Telepon Customer">
     </div>
 
     <div class="form-group">

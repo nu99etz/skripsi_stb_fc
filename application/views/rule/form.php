@@ -9,8 +9,8 @@ if (empty($rule)) {
     $kode_kerusakan = '';
 } else {
     $id = $rule['id'];
-    $parent_kode_gejala = $rule['kode_gejala'];
-    // $child_kode_gejala = $rule['child_kode_gejala'];
+    $parent_kode_gejala = $rule['parent_kode_gejala'];
+    $child_kode_gejala = $rule['child_kode_gejala'];
     $kode_kerusakan = $rule['kode_kerusakan'];
 }
 

@@ -133,7 +133,7 @@ $this->load->view('_partial/modal', $data);
 
     $(document).on('click', '.add', function() {
         let _url = $(this).attr('action');
-        getViewModal(_url, _modal);
+        window.open(_url);
     });
 
     $(document).on('click', '.edit', function() {
