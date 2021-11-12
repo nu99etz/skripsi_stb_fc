@@ -16,6 +16,9 @@
             <tr>
                 <td>Nomor Telepon : </td>
             </tr>
+            <tr>
+                <td>Alamat : </td>
+            </tr>
         </table>
     </div>
 
@@ -39,6 +42,9 @@
             </tr>
             <tr>
                 <td><?php echo $view['perbaikan']['no_telepon_customer']; ?></td>
+            </tr>
+            <tr>
+                <td><?php echo $view['perbaikan']['alamat_customer']; ?></td>
             </tr>
         </table>
     </div>
