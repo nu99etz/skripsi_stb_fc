@@ -9,12 +9,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            Konsultasi
-            <small>Konsultasi</small>
+            Perbaikan
+            <small>Perbaikan</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="<?php echo base_url(); ?>"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="active">Konsultasi</li>
+            <li class="active">Perbaikan</li>
         </ol>
     </section>
 
@@ -24,10 +24,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <div class="col-xs-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">Konsultasi</h3>
+                        <h3 class="box-title">Perbaikan</h3>
                     </div>
                     <div class="box-body">
-                        <button style="float: right;" action="<?php echo base_url(); ?>konsultasi/form" type="button" class="add btn btn-sm btn-success"><i class="fa fa-plus"></i> Tambah</button>
+                        <button style="float: right;" action="<?php echo base_url(); ?>konsultasi" type="button" class="add btn btn-sm btn-success"><i class="fa fa-info"></i> Konsultasi</button>
                         <br />
                         <br />
                         <table id="konsultasi" class="table table-bordered table-striped">
@@ -38,6 +38,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <th>Alamat Customer</th>
                                     <th>No Telepon Customer</th>
                                     <th>Tanggal Konsultasi</th>
+                                    <th>Tanggal Perbaikan</th>
+                                    <th>Tanggal Selesai Perbaikan</th>
+                                    <th>Status Perbaikan</th>
+                                    <th>Nama Teknisi</th>
                                     <th>Nama Customer Service</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -51,6 +55,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <th>Alamat Customer</th>
                                     <th>No Telepon Customer</th>
                                     <th>Tanggal Konsultasi</th>
+                                    <th>Tanggal Perbaikan</th>
+                                    <th>Tanggal Selesai Perbaikan</th>
+                                    <th>Status Perbaikan</th>
+                                    <th>Nama Teknisi</th>
                                     <th>Nama Customer Service</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -70,7 +78,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 $data['modal_id'] = 'form-konsultasi';
 $data['modal_size'] = 'lg';
-$data['modal_title'] = 'Form Konsultasi';
+$data['modal_title'] = 'Form Perbaikan';
 $this->load->view('_partial/modal', $data);
 
 $data['modal_id'] = 'form-notif';
@@ -82,7 +90,7 @@ $this->load->view('_partial/modal', $data);
 
 <script>
     let _table = $('#konsultasi');
-    let _url = "<?php echo base_url(); ?>konsultasi/ajax_konsultasi";
+    let _url = "<?php echo base_url(); ?>konsultasi/ajax_perbaikan";
     let _modal = $('#form-konsultasi');
     let _modal_kerusakan = $('#form-notif');
 
@@ -133,12 +141,34 @@ $this->load->view('_partial/modal', $data);
 
     $(document).on('click', '.add', function() {
         let _url = $(this).attr('action');
-        window.open(_url);
+        // getViewModal(_url, _modal);
+        // window.open(_url);
+        window.location.href = _url;
     });
 
     $(document).on('click', '.edit', function() {
         let _url = $(this).attr('url');
         getViewModal(_url, _modal);
+    });
+
+    $(document).on('click', '.selesai', function() {
+        let _url = $(this).attr('url');
+        Swal.fire({
+            title: 'Apakah Anda Telah Menyelesaikan Perbaikan Ini ?',
+            showCancelButton: true,
+            confirmButtonText: `Selesai`,
+            confirmButtonColor: '#d33',
+            icon: 'question'
+        }).then((result) => {
+            if (result.value) {
+                send((data, xhr = null) => {
+                    if (data.status == "success") {
+                        Swal.fire("Sukses", data.messages, 'success');
+                        _table.DataTable().ajax.reload();
+                    }
+                }, _url, "json", "get");
+            }
+        });
     });
 
     $(document).on('submit', '#form', function() {
@@ -166,6 +196,25 @@ $this->load->view('_partial/modal', $data);
             }
         }, _url, 'json', 'post', _data);
     });
+
+    // $(document).on('submit', '#konsul_tmp', function() {
+    //     event.preventDefault();
+    //     let _url = $(this).attr('action');
+    //     let _data = new FormData($(this)[0]);
+    //     send((data, xhr = null) => {
+    //         if (data.status == 'notvalid') {
+    //             FailedNotif(data.messages);
+    //         } else if (data.status == 'success') {
+
+    //             window.location.href = data.url;
+
+    //         } else if (data.status == 'failed') {
+
+    //             FailedNotif(data.messages);
+
+    //         }
+    //     }, _url, 'json', 'post', _data);
+    // });
 
     $(document).on('click', '.delete', function() {
         let _url = $(this).attr('url');

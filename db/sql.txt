@@ -4,21 +4,62 @@ DROP TABLE proses_perbaikan;
 DROP TABLE gejala_konsultasi;
 DROP TABLE perbaikan;
 
+create table rule (
+    id int AUTO_INCREMENT PRIMARY KEY,
+    kode_kerusakan int,
+    gejala varchar(255),
+    FOREIGN KEY(kode_kerusakan) REFERENCES kerusakan(id)
+);
+
 create table rule_breadth (
     id int AUTO_INCREMENT PRIMARY KEY,
+    id_rule int,
     parent_kode_gejala int,
     child_kode_gejala int,
     kode_kerusakan int,
+    FOREIGN KEY(id_rule) REFERENCES rule(id),
     FOREIGN KEY(parent_kode_gejala) REFERENCES gejala(id),
     FOREIGN KEY(child_kode_gejala) REFERENCES gejala(id),
     FOREIGN KEY(kode_kerusakan) REFERENCES kerusakan(id)
 );
 
-create table konsultasi_gejala (
+create table konsultasi_tmp (
     id int AUTO_INCREMENT PRIMARY KEY,
     id_customer_service int,
     id_gejala int,
     FOREIGN KEY(id_customer_service) REFERENCES pegawai(id),
+    FOREIGN KEY(id_gejala) REFERENCES gejala(id)
+);
+
+create table konsultasi_gejala_tmp (
+    id int AUTO_INCREMENT PRIMARY KEY,
+    id_konsul int,
+    id_gejala int,
+    FOREIGN KEY(id_konsul) REFERENCES konsultasi_tmp(id),
+    FOREIGN KEY(id_gejala) REFERENCES gejala(id)
+);
+
+create table perbaikan (
+    id int AUTO_INCREMENT PRIMARY KEY,
+    id_customer_service int,
+    id_kerusakan int,
+    id_teknisi int,
+    nama_customer varchar(255),
+    alamat_customer text,
+    tanggal_konsultasi date,
+    tanggal_mulai_perbaikan date,
+    tanggal_selesai_perbaikan date,
+    status_perbaikan int,
+    FOREIGN KEY(id_customer_service) REFERENCES pegawai(id),
+    FOREIGN KEY(id_kerusakan) REFERENCES kerusakan(id),
+    FOREIGN KEY(id_teknisi) REFERENCES pegawai(id)
+);
+
+create table perbaikan_gejala (
+    id int AUTO_INCREMENT PRIMARY KEY,
+    id_perbaikan int,
+    id_gejala int,
+    FOREIGN KEY(id_perbaikan) REFERENCES perbaikan(id),
     FOREIGN KEY(id_gejala) REFERENCES gejala(id)
 );
 

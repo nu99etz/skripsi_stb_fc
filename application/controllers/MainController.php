@@ -93,6 +93,12 @@ class MainController extends CI_Controller
                     'icon' => 'fa fa-info',
                     'url' => base_url() . 'konsultasi'
                 ],
+
+                'Perbaikan' => [
+                    'name' => 'Perbaikan',
+                    'icon' => 'fa fa-cog',
+                    'url' => base_url() . 'perbaikan'
+                ],
             ];
         } else if ($this->session->userdata('role') == 2) {
 
@@ -158,6 +164,12 @@ class MainController extends CI_Controller
                     'icon' => 'fa fa-info',
                     'url' => base_url() . 'konsultasi'
                 ],
+
+                'Perbaikan' => [
+                    'name' => 'Perbaikan',
+                    'icon' => 'fa fa-cog',
+                    'url' => base_url() . 'perbaikan'
+                ],
             ];
         } else if ($this->session->userdata('role') == 3) {
 
@@ -172,6 +184,12 @@ class MainController extends CI_Controller
                     'name' => 'Konsultasi',
                     'icon' => 'fa fa-info',
                     'url' => base_url() . 'konsultasi'
+                ],
+
+                'Perbaikan' => [
+                    'name' => 'Perbaikan',
+                    'icon' => 'fa fa-cog',
+                    'url' => base_url() . 'perbaikan'
                 ],
             ];
         }

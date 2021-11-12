@@ -37,7 +37,24 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </section>
 </div>
 
+<?php
+
+$data['modal_id'] = 'form-konsultasi';
+$data['modal_size'] = 'lg';
+$data['modal_title'] = 'Form Konsultasi';
+$this->load->view('_partial/modal', $data);
+
+$data['modal_id'] = 'form-notif';
+$data['modal_size'] = 'lg';
+$data['modal_title'] = 'Notifikasi Kerusakan';
+$this->load->view('_partial/modal', $data);
+
+?>
+
 <script>
+    let _modal = $('#form-konsultasi');
+    let _modal_kerusakan = $('#form-notif');
+
     $(document).on('change', 'input[name="id_gejala"]:checked', function() {
         let _id = $('input[name="id_gejala"]:checked').val();
 
@@ -66,11 +83,36 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
     $(document).on('click', '#ulang', function() {
         let _url = $(this).attr('action');
-        window.location.href = _url;
+        Swal.fire({
+            title: 'Apakah Anda Yakin Mengulangi Pemilihan ?',
+            showCancelButton: true,
+            confirmButtonText: `Ulangi`,
+            confirmButtonColor: '#d33',
+            icon: 'question'
+        }).then((result) => {
+            if (result.value) {
+                window.location.href = _url;
+            }
+        });
     });
 
-    window.onbeforeunload = function(e) {
-        return 'Apakah Konsultasi Sudah Selesai ?';
-    };
-    
+    $(document).on('click', '#simpan', function() {
+        let _id_kerusakan = $('#id_kerusakan').val();
+        let _url = "<?php echo base_url(); ?>konsultasi/form_perbaikan/" + _id_kerusakan;
+        getViewModal(_url, _modal);
+    });
+
+    $(document).on('submit', '#perbaikan', function() {
+        event.preventDefault();
+        let _url = $(this).attr('action');
+        let _data = new FormData($(this)[0]);
+        send((data, xhr = null) => {
+            if (data.status == 'notvalid') {
+                FailedNotif(data.messages);
+            } else {
+                window.location.href = data.url;
+            }
+
+        }, _url, 'json', 'post', _data);
+    });
 </script>

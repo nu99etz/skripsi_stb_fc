@@ -4,19 +4,20 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 if (empty($rule)) {
     $id = '';
-    $parent_kode_gejala = '';
-    // $child_kode_gejala = '';
     $kode_kerusakan = '';
 } else {
     $id = $rule['id'];
-    $parent_kode_gejala = $rule['parent_kode_gejala'];
-    $child_kode_gejala = $rule['child_kode_gejala'];
     $kode_kerusakan = $rule['kode_kerusakan'];
 }
 
 ?>
 
 <form action="<?php echo $action; ?>" id="form" method="post" enctype="multipart/form-data">
+
+    <?php if (!empty($id)) {
+    ?>
+        <input type="hidden" name="id" id="id" value="<?php echo $id; ?>">
+    <?php } ?>
 
     <div class="form-group">
         <label>Kode Kerusakan</label>
@@ -41,7 +42,9 @@ if (empty($rule)) {
 
     <div class="form-group">
         <label>Pilih Gejala</label>
-        <?php echo $gejala;?>
+        <div class="row">
+            <?php echo $gejala; ?>
+        </div>
     </div>
 
     <div class="form-group">

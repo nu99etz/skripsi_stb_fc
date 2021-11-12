@@ -4,9 +4,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class ForwardChainingModel extends MainModel
 {
-    public function Konsultasi()
+    public function Perbaikan()
     {
-        $sql = "select a.*, b.nama_pegawai as nama_cs from konsultasi a left join pegawai b on a.id_customer_service = b.id";
+        $id_cs = $this->session->userdata('id_pegawai');
+        $sql = "select a.*, b.nama_pegawai as nama_cs, c.nama_pegawai as nama_teknisi from perbaikan a left join pegawai b on a.id_customer_service = b.id left join pegawai c on a.id_teknisi = c.id";
+        if($id_cs > 1) {
+            $sql .= " where a.id_customer_service = ".$id_cs;
+        }
         $query = $this->db->query($sql)->result_array();
         return $query;
     }
@@ -125,29 +129,41 @@ class ForwardChainingModel extends MainModel
         }
     }
 
-    public function detailKonsultasi($id)
+    public function detailPerbaikan($id)
     {
-        $konsultasi = $this->db->select('*')->from('konsultasi')->where(['id' => $id])->get()->row_array();
-        $sql_proses_konsultasi = "select a.*, b.nama_kerusakan, c.penyebab_kerusakan, d.solusi_kerusakan from konsultasi_kerusakan a left join kerusakan b on a.id_kerusakan = b.id left join penyebab_kerusakan c on a.id_kerusakan = c.kode_kerusakan left join solusi_kerusakan d on a.id_kerusakan = d.kode_kerusakan where a.id_konsultasi = " . $id;
-        $query_proses_konsultasi = $this->db->query($sql_proses_konsultasi)->result_array();
-        $gejala_perbaikan = $this->db->select('*')->from('gejala_konsultasi')->join('gejala', 'gejala_konsultasi.id_gejala = gejala.id', 'left')->where(['id_konsultasi' => $id])->get()->result_array();
-        $cs = $this->db->select('*')->from('pegawai')->where(['id' => $konsultasi['id_customer_service']])->get()->row_array();
+        $perbaikan = $this->db->select('*')->from('perbaikan')->where(['id' => $id])->get()->row_array();
+        $sql_kerusakan = "select a.*, b.penyebab_kerusakan, c.solusi_kerusakan from kerusakan a left join penyebab_kerusakan b on a.id = b.kode_kerusakan left join solusi_kerusakan c on a.id = c.kode_kerusakan where a.id = ".$perbaikan['id_kerusakan'];
+        $kerusakan = $this->db->query($sql_kerusakan)->result_array();
+        $gejala_perbaikan = $this->db->select('*')->from('perbaikan_gejala')->where(['id_perbaikan' => $perbaikan['id']])->get()->result_array();
+        foreach($gejala_perbaikan as $key => $value) {
+            $gejala_query = $this->db->select('*')->from('gejala')->where(['id' => $value['id_gejala']])->get()->row_array();
+            $gejala[] = $gejala_query['nama_gejala'];
+        }
+        $cs = $this->db->select('*')->from('pegawai')->where(['id' => $perbaikan['id_customer_service']])->get()->row_array();
+        $teknisi = $this->db->select('*')->from('pegawai')->where(['id' => $perbaikan['id_teknisi']])->get()->row_array();
 
         $detail_perbaikan = [
-            'konsultasi' => $konsultasi,
-            'customer_service' => [
-                'kode_pegawai' => $cs['kode_pegawai'],
-                'nama_cs' => $cs['nama_pegawai']
+            'perbaikan' => $perbaikan,
+            'pegawai' => [
+                'cs' => $cs,
+                'teknisi' => $teknisi
             ],
-            'gejala_kerusakan' => $gejala_perbaikan,
-            'konsultasi_perbaikan' => $query_proses_konsultasi
+            'gejala' => $gejala,
+            'kerusakan' => $kerusakan
         ];
 
         return $detail_perbaikan;
     }
 
+    /**
+     * Fungsi Untuk Menampilkan Pertanyaan Dan Jawaban Berdasarkan Forward Chainning
+     * @param int $id
+     * @return array
+     */
+
     public function rootQuestion($id = null)
     {
+        // Cek Jika Ada Id Yang Di Parsing
         if (empty($id)) {
             $root = $this->db->select('*')->from('gejala')->limit(3)->order_by('id', 'asc')->get();
             return [
@@ -156,8 +172,7 @@ class ForwardChainingModel extends MainModel
             ];
         } else {
 
-            // Insert Konsul Gejala Ke Tabel Konsultasi Gejala
-
+            // Insert Gejala Dan Id CS Ke Temp Konsultasi
             $id_cs = $this->session->userdata('id_pegawai');
 
             $gjl_ins = [
@@ -165,8 +180,10 @@ class ForwardChainingModel extends MainModel
                 'id_gejala' => $id
             ];
 
-            // $this->db->insert('konsultasi_gejala', $gjl_ins);
+            $this->db->insert('konsultasi_tmp', $gjl_ins);
 
+
+            // Cek Parent Kode apakah ada id yang berkaitan
             $sql_rule = $this->db->select('*')->from('rule_breadth')->where(['parent_kode_gejala' => $id])->group_by('child_kode_gejala')->get();
 
             $count_gjl = $sql_rule->num_rows();
@@ -174,8 +191,10 @@ class ForwardChainingModel extends MainModel
             $gejala_ = [];
             $kerusakan = [];
 
+            // Jika Gejala Lebih Dari 0 Tampilkan Pertanyaan Lagi
             if ($count_gjl > 0) {
 
+                // Ambil Pertanyaan Dengan Kriteria dari Child Kode Gejala
                 foreach ($sql_rule->result_array() as $key => $value) {
                     $row = [];
                     $gejala = $this->db->select('*')->from('gejala')->where(['id' => $value['child_kode_gejala']])->get()->row_array();
@@ -188,8 +207,6 @@ class ForwardChainingModel extends MainModel
                 }
 
                 $sql_rule = $this->db->select('*')->from('rule_breadth')->where(['parent_kode_gejala' => $id])->or_where(['child_kode_gejala' => $id])->get();
-
-                // $this->maintence->Debug($sql_rule->result_array());
 
                 foreach ($sql_rule->result_array() as $key => $value) {
                     $row = [];
@@ -204,7 +221,6 @@ class ForwardChainingModel extends MainModel
 
                             $kerusakan[] = $row;
                         }
-
                     }
                 }
             } else {
@@ -229,5 +245,106 @@ class ForwardChainingModel extends MainModel
                 'kerusakan' => $kerusakan,
             ];
         }
+    }
+
+    public function getDeleteKonsul()
+    {
+        $id_cs = $this->session->userdata('id_pegawai');
+        $this->db->where(['id_customer_service' => $id_cs])->delete('konsultasi_tmp');
+    }
+
+    public function storePerbaikan()
+    {
+        $post = $this->input->post();
+
+        $this->form_validation->set_rules('nama_customer', 'Nama Customer', 'required');
+        $this->form_validation->set_rules('alamat_customer', 'Alamat Customer', 'required');
+        $this->form_validation->set_rules('no_telepon_customer', 'Nomor Telepon Customer', 'required');
+        $this->form_validation->set_rules('id_teknisi', 'Nama Teknisi', 'required');
+
+        $id_cs = $this->session->userdata('id_pegawai');
+
+        if ($this->form_validation->run()) {
+
+            $data_perbaikan = [
+                'id_customer_service' => $id_cs,
+                'id_kerusakan' => $post['id_kerusakan'],
+                'id_teknisi' => $post['id_teknisi'],
+                'nama_customer' => $post['nama_customer'],
+                'alamat_customer' => $post['alamat_customer'],
+                'no_telepon_customer' => $post['no_telepon_customer'],
+                'tanggal_konsultasi' => date('Y-m-d'),
+                'tanggal_mulai_perbaikan' => date('Y-m-d'),
+                'tanggal_selesai_perbaikan' => NULL,
+                'status_perbaikan' => 0
+            ];
+
+            $this->db->trans_start();
+
+            $this->db->insert('perbaikan', $data_perbaikan);
+
+            if ($this->db->trans_status() === false) {
+                $this->db->trans_rollback();
+            } else {
+
+                $this->db->trans_commit();
+
+                $perbaikan = $this->db->select('id')->from('perbaikan')->where(['id_customer_service' => $id_cs])->order_by('id', 'DESC')->limit(1)->get()->row_array();
+
+                $konsul_tmp = $this->db->select('*')->from('konsultasi_tmp')->where(['id_customer_service' => $id_cs])->get();
+    
+                $record_gjl_per = [];
+    
+                foreach($konsul_tmp->result_array() as $key => $value) {
+                    $row = [];
+                    $row['id_perbaikan'] = $perbaikan['id'];
+                    $row['id_gejala'] = $value['id_gejala'];
+                    $record_gjl_per[] = $row; 
+                }
+    
+                $this->db->trans_start();
+    
+                $this->db->insert_batch('perbaikan_gejala', $record_gjl_per);
+    
+                if ($this->db->trans_status() === false) {
+                    $this->db->trans_rollback();
+                } else {
+                    $this->db->trans_commit();
+
+                    $this->getDeleteKonsul();
+
+                    $response = [
+                        'status' => 'success',
+                    ];
+                    $status = 0;
+                }
+            }
+        } else {
+
+            $response = [
+                'status' => 'notvalid',
+                'messages' => validation_errors()
+            ];
+            $status = 1;
+        }
+        $this->insertLog($this->session->userdata('name'), 'insert-perbaikan', $post, $status);
+        return $response;
+    }
+
+    public function selesaiPerbaikan($id)
+    {
+        $data_perbaikan = [
+            'tanggal_selesai_perbaikan' => date('Y-m-d'),
+            'status_perbaikan' => 1
+        ];
+
+        $this->db->where(['id' => $id])->update('perbaikan', $data_perbaikan);
+
+        $response = [
+            'status' => 'success',
+        ];
+        $status = 0;
+        $this->insertLog($this->session->userdata('name'), 'update-perbaikan', $data_perbaikan, $status);
+        return $response;
     }
 }

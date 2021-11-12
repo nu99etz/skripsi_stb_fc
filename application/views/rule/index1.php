@@ -37,7 +37,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <th>Nama Kerusakan</th>
                                     <th>Parent Gejala</th>
                                     <th>Child Gejala</th>
-                                    <th>Aksi</th>
+                                    <!-- <th>Aksi</th> -->
                                 </tr>
                             </thead>
                             <tbody>
@@ -48,7 +48,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <th>Nama Kerusakan</th>
                                     <th>Parent Gejala</th>
                                     <th>Child Gejala</th>
-                                    <th>Aksi</th>
+                                    <!-- <th>Aksi</th> -->
                                 </tr>
                             </tfoot>
                         </table>
