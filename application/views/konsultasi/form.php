@@ -6,36 +6,44 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-        <h1>
-            Konsultasi
-            <small>Konsultasi</small>
-        </h1>
-        <ol class="breadcrumb">
-            <li><a href="<?php echo base_url(); ?>"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="active">Konsultasi</li>
-        </ol>
-    </section>
+    <?php if ($this->session->userdata('role') != 1 && $this->session->userdata('role') != 2) {
+    ?>
+        <div class="container">
+        <?php } ?>
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                Konsultasi
+                <small>Konsultasi</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="<?php echo base_url(); ?>"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+                <li class="active">Konsultasi</li>
+            </ol>
+        </section>
 
-    <!-- Main content -->
-    <section class="content">
-        <div class="row">
-            <div class="col-xs-12">
-                <div class="box">
-                    <div class="box-header">
-                        <h3 class="box-title">Konsultasi</h3>
-                    </div>
-                    <div class="box-body" id="gejala">
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">Konsultasi</h3>
+                        </div>
+                        <div class="box-body" id="gejala">
 
-                        <?php echo $gejala; ?>
+                            <?php echo $gejala; ?>
 
+                        </div>
                     </div>
                 </div>
             </div>
+        </section>
         </div>
-    </section>
+        <?php if ($this->session->userdata('role') != 1 && $this->session->userdata('role') != 2) {
+        ?>
 </div>
+<?php } ?>
 
 <?php
 

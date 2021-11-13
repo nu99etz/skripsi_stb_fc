@@ -195,8 +195,12 @@ class MainController extends CI_Controller
         }
 
         $this->load->view('_partial/header', $data);
-        $this->load->view('_partial/navbar', $data);
-        $this->load->view('_partial/sidebar', $data);
+        if($this->session->userdata('role') == 1 || $this->session->userdata('role') == 2) {
+            $this->load->view('_partial/navbar', $data);
+            $this->load->view('_partial/sidebar', $data);
+        } else {
+            $this->load->view('customer_service/navbar', $data);
+        }
         if (is_array($layout)) {
             foreach ($layout as $layouts) {
                 $this->load->view($layouts, $data);

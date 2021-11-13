@@ -19,8 +19,14 @@ class DashboardController extends MainController
         $data['pegawai'] = $this->UserModel->PegawaiTotal();
         $data['user'] = $this->UserModel->UserTotal();
 
+        if($this->session->userdata('role') == 1 || $this->session->userdata('role') == 2) {
+            $loc = 'dashboard';
+        } else {
+            $loc = 'customer_service';
+        }
+
         $layout = array(
-            'dashboard/dashboard'
+            $loc.'/dashboard'
         );
         $this->getLayout($layout, $data);
     }

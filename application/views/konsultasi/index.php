@@ -6,73 +6,81 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-        <h1>
-            Perbaikan
-            <small>Perbaikan</small>
-        </h1>
-        <ol class="breadcrumb">
-            <li><a href="<?php echo base_url(); ?>"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="active">Perbaikan</li>
-        </ol>
-    </section>
+    <?php if ($this->session->userdata('role') != 1 && $this->session->userdata('role') != 2) {
+    ?>
+        <div class="container">
+        <?php } ?>
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                Perbaikan
+                <small>Perbaikan</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="<?php echo base_url(); ?>"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+                <li class="active">Perbaikan</li>
+            </ol>
+        </section>
 
-    <!-- Main content -->
-    <section class="content">
-        <div class="row">
-            <div class="col-xs-12">
-                <div class="box">
-                    <div class="box-header">
-                        <h3 class="box-title">Perbaikan</h3>
-                    </div>
-                    <div class="box-body">
-                        <button style="float: right;" action="<?php echo base_url(); ?>konsultasi" type="button" class="add btn btn-sm btn-success"><i class="fa fa-info"></i> Konsultasi</button>
-                        <br />
-                        <br />
-                        <table id="konsultasi" class="table table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Nama Customer</th>
-                                    <th>Alamat Customer</th>
-                                    <th>No Telepon Customer</th>
-                                    <th>Tanggal Konsultasi</th>
-                                    <th>Tanggal Perbaikan</th>
-                                    <th>Tanggal Selesai Perbaikan</th>
-                                    <th>Status Perbaikan</th>
-                                    <th>Nama Teknisi</th>
-                                    <th>Nama Customer Service</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Nama Customer</th>
-                                    <th>Alamat Customer</th>
-                                    <th>No Telepon Customer</th>
-                                    <th>Tanggal Konsultasi</th>
-                                    <th>Tanggal Perbaikan</th>
-                                    <th>Tanggal Selesai Perbaikan</th>
-                                    <th>Status Perbaikan</th>
-                                    <th>Nama Teknisi</th>
-                                    <th>Nama Customer Service</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </tfoot>
-                        </table>
-                        <!-- <button style="float: right;" type="button" id="import" class="btn btn-sm btn-primary"><i class="fa fa-upload"></i> Import Excel</button>
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">Perbaikan</h3>
+                        </div>
+                        <div class="box-body">
+                            <button style="float: right;" action="<?php echo base_url(); ?>konsultasi" type="button" class="add btn btn-sm btn-success"><i class="fa fa-info"></i> Konsultasi</button>
+                            <br />
+                            <br />
+                            <table id="konsultasi" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Nama Customer</th>
+                                        <th>Alamat Customer</th>
+                                        <th>No Telepon Customer</th>
+                                        <th>Tanggal Konsultasi</th>
+                                        <th>Tanggal Perbaikan</th>
+                                        <th>Tanggal Selesai Perbaikan</th>
+                                        <th>Status Perbaikan</th>
+                                        <th>Nama Teknisi</th>
+                                        <th>Nama Customer Service</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Nama Customer</th>
+                                        <th>Alamat Customer</th>
+                                        <th>No Telepon Customer</th>
+                                        <th>Tanggal Konsultasi</th>
+                                        <th>Tanggal Perbaikan</th>
+                                        <th>Tanggal Selesai Perbaikan</th>
+                                        <th>Status Perbaikan</th>
+                                        <th>Nama Teknisi</th>
+                                        <th>Nama Customer Service</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            <!-- <button style="float: right;" type="button" id="import" class="btn btn-sm btn-primary"><i class="fa fa-upload"></i> Import Excel</button>
             <button style="float: right;" type="button" id="cek-pohon" class="btn btn-sm btn-success"><i class="fa fa-tree"></i> Cek Pohon Keputusan</button>
             <button style="float: right;" type="button" id="hitung" class="btn btn-sm btn-success"><i class="fa fa-refresh"></i> Cek Penghitungan</button> -->
+                        </div>
                     </div>
                 </div>
             </div>
+        </section>
         </div>
-    </section>
+        <?php if ($this->session->userdata('role') != 1 && $this->session->userdata('role') != 2) {
+        ?>
 </div>
+<?php } ?>
 
 <?php
 
