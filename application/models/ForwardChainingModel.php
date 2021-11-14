@@ -15,110 +15,6 @@ class ForwardChainingModel extends MainModel
         return $query;
     }
 
-    public function storeKonsultasi($kerusakan = [], $gejala = [])
-    {
-        $post = $this->input->post();
-        $this->form_validation->set_rules('nama_customer', 'Nama Customer', 'required');
-        $this->form_validation->set_rules('alamat_customer', 'Alamat Customer', 'required');
-        $this->form_validation->set_rules('no_telepon_customer', 'No Telepon Customer', 'required');
-
-        if ($this->form_validation->run()) {
-
-            $data_konsultasi = [
-                'id_customer_service' => $this->session->userdata('id_pegawai'),
-                'nama_customer' => ucwords($post['nama_customer']),
-                'alamat_customer' => $post['alamat_customer'],
-                'no_telepon_customer' => $post['no_telepon_customer'],
-                'tanggal_konsultasi' => date('Y-m-d'),
-            ];
-
-            $this->db->trans_start();
-
-            $this->db->insert('konsultasi', $data_konsultasi);
-
-            if ($this->db->trans_status() === false) {
-
-                $this->db->trans_rollback();
-
-                throw new Exception('Data Perbaikan Gagal Di Input');
-            } else {
-
-                $this->db->trans_commit();
-
-                $check_konsultasi_id = $this->db->select('id')->from('konsultasi')->order_by('id', 'DESC')->limit(1)->get()->result_array();
-
-                $id = $check_konsultasi_id[0]['id'];
-
-                $record = [];
-
-                foreach ($kerusakan as $value) {
-                    $row = [];
-                    $row['id_konsultasi'] = $id;
-                    $row['id_kerusakan'] = $value;
-                    $record[] = $row;
-                }
-
-                $this->db->trans_start();
-
-                $this->db->insert_batch('konsultasi_kerusakan', $record);
-
-                if ($this->db->trans_status() === false) {
-
-                    $this->db->trans_rollback();
-
-                    throw new Exception('Data Konsultasi Kerusakan Gagal Di Input');
-                } else {
-                    $this->db->trans_commit();
-
-                    $record_gejala = [];
-
-                    foreach ($gejala as $value) {
-                        $row_gejala = [];
-                        $row_gejala['id_konsultasi'] = $id;
-                        $row_gejala['id_gejala'] = $value;
-                        $record_gejala[] = $row_gejala;
-                    }
-
-                    $this->db->trans_start();
-
-                    $this->db->insert_batch('gejala_konsultasi', $record_gejala);
-
-                    if ($this->db->trans_status() === false) {
-
-                        $this->db->trans_rollback();
-
-                        throw new Exception('Data Konsultasi Gejala Gagal Di Input');
-                    } else {
-
-                        $this->db->trans_commit();
-                    }
-                }
-            }
-
-            $response = [
-                'status' => 'success'
-            ];
-
-            $status = 0;
-        } else {
-
-            $response = [
-                'status' => 'notvalid',
-                'messages' => validation_errors()
-            ];
-
-            $status = 1;
-        }
-
-        $log_data = [
-            'konsultasi' => $post,
-            'kerusakan' => $kerusakan
-        ];
-
-        $this->insertLog($this->session->userdata('name'), 'insert-perbaikan', $log_data, $status);
-        return $response;
-    }
-
     public function getRule($where = [], $option = null)
     {
         $rule = $this->db->select('*')->from('aturan')->where($where)->get();
@@ -206,6 +102,7 @@ class ForwardChainingModel extends MainModel
                     $gejala_[] = $row;
                 }
 
+                // Cek Parent Gejala atau Child Gejala apakah ada muncul Kerusakan
                 $sql_rule = $this->db->select('*')->from('rule_breadth')->where(['parent_kode_gejala' => $id])->or_where(['child_kode_gejala' => $id])->get();
 
                 foreach ($sql_rule->result_array() as $key => $value) {
@@ -225,6 +122,7 @@ class ForwardChainingModel extends MainModel
                 }
             } else {
 
+                // Jika Tidak ada Pertanyaan/gejala maka cek kerusakan apakah ada
                 $sql_rule = $this->db->select('*')->from('rule_breadth')->where(['parent_kode_gejala' => $id])->or_where(['child_kode_gejala' => $id])->get();
 
                 foreach ($sql_rule->result_array() as $key => $value) {

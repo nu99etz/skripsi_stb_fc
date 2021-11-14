@@ -7,6 +7,12 @@ require_once('ForwardChainingController.php');
 class KonsultasiController extends ForwardChainingController
 {
 
+
+    /**
+     * List Data Perbaikan Request Via AJAX (Jquery)
+     * @return json array
+     * 
+     */
     public function ajax_perbaikan()
     {
         $data = $this->ForwardChainingModel->Perbaikan();
@@ -22,10 +28,10 @@ class KonsultasiController extends ForwardChainingController
             $row[] = $value['tanggal_mulai_perbaikan'];
             $row[] = $value['tanggal_selesai_perbaikan'];
             $button = '<button type="button" name="update" url="' . base_url() . 'perbaikan/detailPerbaikan/' . $value['id'] . '" class="edit btn btn-primary btn-sm"><i class = "fa fa-eye"></i></button> ';
-            if($value['status_perbaikan'] == 0) {
+            if ($value['status_perbaikan'] == 0) {
                 $sp = 'Belum Selesai';
                 $button .= '<button type="button" name="selesai" url="' . base_url() . 'perbaikan/selesai/' . $value['id'] . '" class="selesai btn btn-danger btn-sm"><i class = "fa fa-cog"></i></button> ';
-            } else if($value['status_perbaikan'] == 1) {
+            } else if ($value['status_perbaikan'] == 1) {
                 $sp = 'Selesai';
             }
             $row[] = $sp;
@@ -40,28 +46,35 @@ class KonsultasiController extends ForwardChainingController
             'data' => $record
         ];
 
+        // konversi ke json untuk membuat respon jquery
         echo json_encode($response);
     }
 
-    public function index()
-    {
-        $this->ForwardChainingModel->getDeleteKonsul('all');
-        return $this->getLayout('konsultasi/index');
-    }
-
+    /**
+     * Render Pertanyaan Gejala
+     * @param int $id
+     * @param string $param
+     * @return $html
+     * 
+     */
     private function renderHTML($id, $param)
     {
+        // JIka Tidak ada id maka cek root Question tanpa id
         if (empty($id)) {
             $gejala = $this->ForwardChainingModel->rootQuestion();
         } else {
+            // Jika cek root Question dengan Id
             $gejala = $this->ForwardChainingModel->rootQuestion($id);
         }
 
         $html = '';
         $html .= '<form action="#" id="form" method="post" enctype="multipart/form-data">';
         $html .= '<div class="form-group">';
+        // Cek Jika Kerusakan Ditemukan
         if (!empty($gejala['kerusakan'])) {
+            // Cek Tombol Param Next
             if ($param == "next") {
+                // Cek Jika Gejala Tidak Kosong
                 if (!empty($gejala['gejala'])) {
                     $cnt = count($gejala['gejala']);
                     foreach ($gejala['gejala'] as $key => $value) {
@@ -76,24 +89,28 @@ class KonsultasiController extends ForwardChainingController
                     // $html .= '&nbsp; <button type="reset" action = "' . base_url() . "konsultasi/rootquestion" . '" id="ulang" class="btn btn-warning"><i class="fa fa-refresh"></i> Ulangi</button>';
                     $html .= '</div>';
                 } else {
+                    // Jika Kosong langsung arahkan ke kerusakan ditemukan
                     $html .= '<b><h3>Ditemukan Kerusakan</h3></b>';
-                    $html .= '<p>'.$gejala['kerusakan'][0]['kode_kerusakan'] . ' - ' . $gejala['kerusakan'][0]['nama_kerusakan'].'</p>';
-                    $html .= '<input type = "hidden" name = "id_kerusakan" id ="id_kerusakan" value = "'. $gejala['kerusakan'][0]['id'] . '">';
+                    $html .= '<p>' . $gejala['kerusakan'][0]['kode_kerusakan'] . ' - ' . $gejala['kerusakan'][0]['nama_kerusakan'] . '</p>';
+                    $html .= '<input type = "hidden" name = "id_kerusakan" id ="id_kerusakan" value = "' . $gejala['kerusakan'][0]['id'] . '">';
                     $html .= '<div class="form-group">';
                     $html .= '<button type="button" id="simpan" class="next btn btn-success"><i class="fa fa-cog"></i> Perbaikan</button>';
                     $html .= '&nbsp; <button type="reset" action = "' . base_url() . "konsultasi/rootquestion" . '" id="ulang" class="btn btn-warning"><i class="fa fa-refresh"></i> Ulangi</button>';
                     $html .= '</div>';
                 }
+                // Jika param stop pada tombol cari kerusakan
             } else if ($param == 'stop') {
+                // arahkan ke kemumgkinan ditemukan kerusakan
                 $html .= '<b><h3>Kemungkinan Ditemukan Kerusakan</h3></b>';
-                $html .= '<p>'.$gejala['kerusakan'][0]['kode_kerusakan'] . ' - ' . $gejala['kerusakan'][0]['nama_kerusakan'].'</p>';
-                $html .= '<input type = "hidden" name = "id_kerusakan" id ="id_kerusakan" value = "'. $gejala['kerusakan'][0]['id'] . '">';
+                $html .= '<p>' . $gejala['kerusakan'][0]['kode_kerusakan'] . ' - ' . $gejala['kerusakan'][0]['nama_kerusakan'] . '</p>';
+                $html .= '<input type = "hidden" name = "id_kerusakan" id ="id_kerusakan" value = "' . $gejala['kerusakan'][0]['id'] . '">';
                 $html .= '<div class="form-group">';
                 $html .= '<button type="button" id="simpan" class="next btn btn-success"><i class="fa fa-cog"></i> Perbaikan</button>';
                 $html .= '&nbsp; <button type="reset" action = "' . base_url() . "konsultasi/rootquestion" . '" id="ulang" class="btn btn-warning"><i class="fa fa-refresh"></i> Ulangi</button>';
                 $html .= '</div>';
             }
         } else {
+            // jika kerusakan kosong ambil gejala saja
             foreach ($gejala['gejala'] as $key => $value) {
                 $html .= '<div class="radio">';
                 $html .= '<label>';
@@ -106,31 +123,57 @@ class KonsultasiController extends ForwardChainingController
         return $html;
     }
 
+    /**
+     * Root Question (Akar dari pertanyaan Eg. (G1,G2,G3))
+     * 
+     * @return html
+     * 
+     */
     public function rootQuestion()
     {
+        // Hapus dulu tabel konsul tmp sesuai id cs diambil dari session
         $this->ForwardChainingModel->getDeleteKonsul();
 
+        // masukkan ke renderHTML dengan param null dan next kenapa null karena tidak ada id yang digunakan alias akar dari pertanyaan
         $data = [
             'gejala' => $this->renderHTML(null, 'next'),
         ];
         return $this->getLayout('konsultasi/form', $data);
     }
 
+    /**
+     * Next Question (Breakdown Pertanyaan Sesuai Rule Jika memilih radio button salah satu)
+     * @param int $id
+     * @param string $next
+     * @return json
+     * 
+     */
     public function getNextQuestion($id, $next)
     {
+        // masukkan ke renderHTML dengan param $id dan $next yang nanti nya $id tersebut digunakan untuk menemukan child dari gejala tersebut
         $response = [
             'gejala' => $this->renderHTML($id, $next),
         ];
 
+        // konversi ke json untuk membuat respon jquery
         echo json_encode($response);
     }
 
+    /**
+     * Stop Question (Jika sudah menemukan kerusakan namun masih ada satu gejala tersisa)
+     * @param int $id
+     * @param string $stop
+     * @return json
+     * 
+     */
     public function getStopQuestion($id, $stop)
     {
+        // masukkan ke renderHTML dengan param $id dan $stop yang nanti nya $id tersebut digunakan untuk menemukan child dari gejala tersebut
         $response = [
             'gejala' => $this->renderHTML($id, $stop),
         ];
 
+        // konversi ke json untuk membuat respon jquery
         echo json_encode($response);
     }
 
@@ -283,16 +326,28 @@ class KonsultasiController extends ForwardChainingController
     //     echo json_encode($response);
     // }
 
+    /**
+     * Menampilkan Form Perbaikan
+     * @param int $id_kerusakan
+     * @return html
+     * 
+     */
     public function perbaikanForm($id_kerusakan)
     {
         $data = [
-            'action' => base_url() . 'konsultasi/storePerbaikan',
-            'teknisi' => $this->UserModel->getAllTeknisi(),
+            'action' => base_url() . 'konsultasi/storePerbaikan', // Url Form Yang Dituju
+            'teknisi' => $this->UserModel->getAllTeknisi(), // Ambil Semua Teknisi
             'kerusakan' => $id_kerusakan
         ];
         return $this->load->view('konsultasi/form_perbaikan', $data);
     }
 
+    /**
+     * Menyimpan Perbaikan
+     * 
+     * @return json
+     * 
+     */
     public function storePerbaikan()
     {
         $insert = $this->ForwardChainingModel->storePerbaikan();
@@ -304,7 +359,7 @@ class KonsultasiController extends ForwardChainingController
         } else if ($insert['status'] == 'success') {
             $response = [
                 'status' => 'success',
-                'url' => base_url().'perbaikan',
+                'url' => base_url() . 'perbaikan',
             ];
         } else {
             $response = [
@@ -312,11 +367,19 @@ class KonsultasiController extends ForwardChainingController
                 'messages' => 'Data Gagal Ditambah'
             ];
         }
+        // konversi ke json untuk membuat respon jquery
         echo json_encode($response);
     }
 
+    /**
+     * Melihat Detail Perbaikan
+     * @param int $id
+     * @return html
+     * 
+     */
     public function viewPerbaikan($id)
     {
+        // Cek Perbaikan DI Tabel Perbaikan
         $view = $this->ForwardChainingModel->detailPerbaikan($id);
 
         $data = [
@@ -326,10 +389,16 @@ class KonsultasiController extends ForwardChainingController
         return $this->load->view('fc/detail', $data);
     }
 
+    /**
+     * Merubah Selesai Perbaikan
+     * @param int $id
+     * @return html
+     * 
+     */
     public function selesaiPerbaikan($id)
     {
         $upd_perbaikan = $this->ForwardChainingModel->selesaiPerbaikan($id);
-        if($upd_perbaikan['status'] == 'success') {
+        if ($upd_perbaikan['status'] == 'success') {
             $response = [
                 'status' => 'success',
                 'messages' => 'Perbaikan Telah Diselesaikan'
@@ -340,6 +409,7 @@ class KonsultasiController extends ForwardChainingController
                 'messages' => 'Perbaikan Gagal Diselesaikan'
             ];
         }
+        // konversi ke json untuk membuat respon jquery
         echo json_encode($response);
     }
 }

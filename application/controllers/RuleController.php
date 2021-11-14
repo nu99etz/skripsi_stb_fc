@@ -98,8 +98,8 @@ class RuleController extends MainController
 
         $html = '';
 
-        $html .= "<div class = 'col-md-6'>";
-        for ($i = 0; $i < 12; $i++) {
+        $html .= "<div class = 'col-md-12'>";
+        for ($i = 0; $i < count($gejala); $i++) {
             $html .= "<div class='checkbox'>";
             $html .= "<label>";
             if (!empty($rule_gejala)) {
@@ -112,27 +112,6 @@ class RuleController extends MainController
                 }
             } else {
                 $html .= "<input type='checkbox' name='kode_gejala[]' id='" .$gejala[$i]['id'] . "'value='" . $gejala[$i]['id'] . "'>";
-                $html .= $gejala[$i]['kode_gejala'] . "-" . $gejala[$i]['nama_gejala'];
-            }
-            $html .= "</label>";
-            $html .= "</div>";
-        }
-        $html .= "</div>";
-
-        $html .= "<div class = 'col-md-6'>";
-        for ($i = 12; $i < 24; $i++) {
-            $html .= "<div class='checkbox'>";
-            $html .= "<label>";
-            if (!empty($rule_gejala)) {
-                if (in_array($gejala[$i]['id'], $rule_gejala)) {
-                    $html .= "<input type='checkbox' name='kode_gejala[]' id='" . $gejala[$i]['id'] . "'value='" . $gejala[$i]['id'] . "' checked>";
-                    $html .= $gejala[$i]['kode_gejala'] . "-" . $gejala[$i]['nama_gejala'];
-                } else {
-                    $html .= "<input type='checkbox' name='kode_gejala[]' id='" . $gejala[$i]['id'] . "'value='" . $gejala[$i]['id'] . "'>";
-                    $html .= $gejala[$i]['kode_gejala'] . "-" . $gejala[$i]['nama_gejala'];
-                }
-            } else {
-                $html .= "<input type='checkbox' name='kode_gejala[]' id='" . $gejala[$i]['id'] . "'value='" . $gejala[$i]['id'] . "'>";
                 $html .= $gejala[$i]['kode_gejala'] . "-" . $gejala[$i]['nama_gejala'];
             }
             $html .= "</label>";

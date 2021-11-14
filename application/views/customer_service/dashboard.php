@@ -21,14 +21,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <!-- Main content -->
         <section class="content">
             <div class="row">
-                <div class="col-md-3"></div>
-                <div class="col-md-6">
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
                     <center>
                         <h3>Selamat Datang [ <?php echo $this->session->userdata('name'); ?> ]</h3><br />
                         <h3>Layani Dengan Sepenuh Hati</h3><br />
                     </center>
                 </div>
-                <div class="col-md-3"></div>
+                <div class="col-lg-3"></div>
             </div>
 
             <!-- Small boxes (Stat box) -->

@@ -63,6 +63,7 @@ $this->load->view('_partial/modal', $data);
     let _modal = $('#form-konsultasi');
     let _modal_kerusakan = $('#form-notif');
 
+    // Ke Pertanyaaan selanjutnya secara dinamis jika salah satu radio button di pilih
     $(document).on('change', 'input[name="id_gejala"]:checked', function() {
         let _id = $('input[name="id_gejala"]:checked').val();
 
@@ -71,15 +72,17 @@ $this->load->view('_partial/modal', $data);
             FailedNotif('Silahkan Memilih Salah Satu Gejala');
 
         } else {
-
+            
             let _url = "<?php echo base_url(); ?>konsultasi/nextquestion/" + _id + "/next";
 
             send((data, xhr = null) => {
+                // Timpa id gejala dengan response json
                 $('#gejala').html(data.gejala);
             }, _url, 'json', 'get');
         }
     });
 
+    // Menstop pertanyaan jika gejala sudah ditemukan
     $(document).on('click', '#stop', function() {
         let _url = $(this).attr('action');
 
@@ -89,6 +92,7 @@ $this->load->view('_partial/modal', $data);
 
     });
 
+    // Mengulangi pertanyaan dari awal
     $(document).on('click', '#ulang', function() {
         let _url = $(this).attr('action');
         Swal.fire({

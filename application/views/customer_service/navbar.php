@@ -20,7 +20,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <!-- Collect the nav links, forms, and other content for toggling -->
                     <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
                         <ul class="nav navbar-nav">
-                            <li><a href="<?php echo base_url();?>">Dashboard <span class="sr-only">(current)</span></a></li>
+                            <!-- <li><a href="<?php echo base_url();?>">Dashboard <span class="sr-only">(current)</span></a></li> -->
                             <li><a href="<?php echo base_url();?>konsultasi">Konsultasi <span class="sr-only">(current)</span></a></li>
                             <li><a href="<?php echo base_url();?>perbaikan">Perbaikan <span class="sr-only">(current)</span></a></li>
                             <!-- <li><a href="#">Link</a></li>
