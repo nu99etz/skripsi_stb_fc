@@ -1,2 +1,4 @@
 /application/config/config.php
 /application/config/database.php
+application/config/ex-config.php
+application/config/ex-database.php

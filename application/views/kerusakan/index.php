@@ -9,8 +9,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            Data Keruskan
-            <small>Data Kerusakan</small>
+            Data Kerusakan
         </h1>
         <ol class="breadcrumb">
             <li><a href="<?php echo base_url(); ?>"><i class="fa fa-dashboard"></i> Dashboard</a></li>
@@ -24,9 +23,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <div class="row">
             <div class="col-xs-12">
                 <div class="box">
-                    <div class="box-header">
-                        <h3 class="box-title">Data Kerusakan</h3>
-                    </div>
                     <div class="box-body">
                         <button style="float: right;" action="<?php echo base_url(); ?>kerusakan/form" type="button" class="add btn btn-sm btn-success"><i class="fa fa-plus"></i> Tambah</button>
                         <br />

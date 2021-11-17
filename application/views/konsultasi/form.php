@@ -14,7 +14,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <section class="content-header">
             <h1>
                 Konsultasi
-                <small>Konsultasi</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="<?php echo base_url(); ?>"><i class="fa fa-dashboard"></i> Dashboard</a></li>
@@ -28,7 +27,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">Konsultasi</h3>
+                            <p>Tanyakan kepada pelanggan dengan awalan kata "Apakah" dan sebutkan gejalanya</p>
                         </div>
                         <div class="box-body" id="gejala">
 
@@ -72,7 +71,7 @@ $this->load->view('_partial/modal', $data);
             FailedNotif('Silahkan Memilih Salah Satu Gejala');
 
         } else {
-            
+
             let _url = "<?php echo base_url(); ?>konsultasi/nextquestion/" + _id + "/next";
 
             send((data, xhr = null) => {

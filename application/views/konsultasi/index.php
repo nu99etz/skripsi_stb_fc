@@ -14,7 +14,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <section class="content-header">
             <h1>
                 Perbaikan
-                <small>Perbaikan</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="<?php echo base_url(); ?>"><i class="fa fa-dashboard"></i> Dashboard</a></li>
@@ -27,9 +26,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <div class="row">
                 <div class="col-xs-12">
                     <div class="box">
-                        <div class="box-header">
-                            <h3 class="box-title">Perbaikan</h3>
-                        </div>
                         <div class="box-body">
                             <button style="float: right;" action="<?php echo base_url(); ?>konsultasi" type="button" class="add btn btn-sm btn-success"><i class="fa fa-info"></i> Konsultasi</button>
                             <br />
