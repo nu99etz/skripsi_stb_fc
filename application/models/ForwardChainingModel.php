@@ -61,7 +61,10 @@ class ForwardChainingModel extends MainModel
     {
         // Cek Jika Ada Id Yang Di Parsing
         if (empty($id)) {
-            $root = $this->db->select('*')->from('gejala')->limit(3)->order_by('id', 'asc')->get();
+            $sql = "select*from gejala where id not in (select child_kode_gejala from rule_breadth)";
+            // $root = $this->db->select('*')->from('gejala')->limit(3)->order_by('id', 'asc')->get();
+            $root = $this->db->query($sql);
+            // $this->maintence->Debug($root->result_array());
             return [
                 'gejala' => $root->result_array(),
                 'kerusakan' => []

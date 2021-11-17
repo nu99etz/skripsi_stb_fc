@@ -68,7 +68,7 @@ class RuleController extends MainController
         $data = [
             'action' => base_url() . 'rule/store',
             'gejala' => $this->RulePair(),
-            'kerusakan' => $this->KerusakanModel->getAllKerusakan(),
+            'kerusakan' => $this->KerusakanModel->getLatestKerusakan('rule'),
             'kode_gejala' => $this->GejalaModel->getAllGejala()
         ];
         $this->load->view('rule/form', $data);
@@ -193,7 +193,8 @@ class RuleController extends MainController
     {
         $rule = $this->RuleModel->editRule($id);
         $gejala = $this->RulePair($rule['id']);
-        $kerusakan = $this->KerusakanModel->getAllKerusakan();
+        // $kerusakan = $this->KerusakanModel->getAllKerusakan();
+        $kerusakan = $this->KerusakanModel->getExistKerusakan($rule['kode_kerusakan'], 'rule');
 
         $data = [
             'action' => base_url() . 'rule/update',

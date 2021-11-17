@@ -195,4 +195,12 @@ class KerusakanModel extends MainModel
         $kerusakan = $this->db->query($query);
         return $kerusakan->result_array();
     }
+
+    public function getExistKerusakan($id, $table)
+    {
+        $query = "select*from kerusakan where id = $id and id in (select kode_kerusakan from ".$table.")";
+        // $kerusakan = $this->db->select('*')->from('kerusakan')->where_not_in('id', "(select kode_kerusakan from ".$table.")")->get();
+        $kerusakan = $this->db->query($query);
+        return $kerusakan->result_array();
+    }
 }

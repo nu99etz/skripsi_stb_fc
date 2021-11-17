@@ -6,8 +6,6 @@ require_once('ForwardChainingController.php');
 
 class KonsultasiController extends ForwardChainingController
 {
-
-
     /**
      * List Data Perbaikan Request Via AJAX (Jquery)
      * @return json array
@@ -48,6 +46,12 @@ class KonsultasiController extends ForwardChainingController
 
         // konversi ke json untuk membuat respon jquery
         echo json_encode($response);
+    }
+
+    public function index()
+    {
+        // $this->ForwardChainingModel->getDeleteKonsul('all');
+        return $this->getLayout('konsultasi/index');
     }
 
     /**
@@ -110,7 +114,7 @@ class KonsultasiController extends ForwardChainingController
                 $html .= '</div>';
             }
         } else {
-            // jika kerusakan kosong ambil gejala saja
+            // jika kerusakan kosong ambil gejala selanjutnya
             foreach ($gejala['gejala'] as $key => $value) {
                 $html .= '<div class="radio">';
                 $html .= '<label>';

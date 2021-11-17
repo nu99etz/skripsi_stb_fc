@@ -5,7 +5,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class AuthController extends CI_Controller
 {
 
-
     public function __construct()
     {
         parent::__construct();
@@ -54,6 +53,7 @@ class AuthController extends CI_Controller
                         $pegawai  = $pegawai['nama_pegawai'];
                         $status = 1;
                     } else {
+                        
                         $session = array(
                             'logged' => TRUE,
                             'username' => $check['id'],
@@ -100,7 +100,6 @@ class AuthController extends CI_Controller
 
     public function logout()
     {
-
         $id = $this->session->userdata('username');
         $update = $this->AuthModel->updateLogin($id, "0", date("D M j G:i:s T Y"));
         if ($update['status'] == 'success') {
