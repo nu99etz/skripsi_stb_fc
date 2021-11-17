@@ -53,26 +53,34 @@ class AuthController extends CI_Controller
                         $pegawai  = $pegawai['nama_pegawai'];
                         $status = 1;
                     } else {
-                        
-                        $session = array(
-                            'logged' => TRUE,
-                            'username' => $check['id'],
-                            'id_pegawai' => $pegawai['id'],
-                            'role' => $pegawai['role_id'],
-                            'kode_pegawai' => $pegawai['kode_pegawai'],
-                            'name' => $pegawai['nama_pegawai'],
-                            'last_login' => $check['last_login']
-                        );
 
-                        $this->session->set_userdata($session);
+                        if ($post['username'] != $check['username']) {
+                            $response = array(
+                                'status' => 'failed',
+                                'messages' => 'Username tidak cocok dengan yang anda inputkan'
+                            );
+                            $status = 1;
+                        } else {
+                            $session = array(
+                                'logged' => TRUE,
+                                'username' => $check['id'],
+                                'id_pegawai' => $pegawai['id'],
+                                'role' => $pegawai['role_id'],
+                                'kode_pegawai' => $pegawai['kode_pegawai'],
+                                'name' => $pegawai['nama_pegawai'],
+                                'last_login' => $check['last_login']
+                            );
 
-                        $response = array(
-                            'status' => 'success',
-                            'messages' => 'Login Sukses Anda Akan Diarahkan Dalam 5 Detik'
-                        );
+                            $this->session->set_userdata($session);
 
-                        $pegawai  = $session['name'];
-                        $status = 0;
+                            $response = array(
+                                'status' => 'success',
+                                'messages' => 'Login Sukses Anda Akan Diarahkan Dalam 5 Detik'
+                            );
+
+                            $pegawai  = $session['name'];
+                            $status = 0;
+                        }
                     }
                 } else if (md5($post['password']) != $check['password']) {
                     $response = array(
